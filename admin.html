@@ -816,9 +816,9 @@
         <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
           <label class="block text-slate-400 font-bold mb-2">পণ্যের ছবি (URL দিন অথবা সরাসরি ফোন/ল্যাপটপ থেকে আপলোড করুন)</label>
           <div class="flex items-center gap-3">
-            <img id="prod-image-preview" src="images/fb/logo.jpg" class="w-16 h-16 object-contain bg-slate-900 rounded-xl border border-slate-700 p-1 flex-shrink-0">
+            <img id="prod-image-preview" src="images/fb/logo.jpg" class="w-16 h-16 object-contain bg-slate-900 rounded-xl border border-slate-700 p-1 flex-shrink-0" onerror="this.onerror=null; this.src='images/fb/logo.jpg'">
             <div class="flex-1 space-y-2">
-              <input type="text" id="prod-modal-image-url" oninput="document.getElementById('prod-image-preview').src = this.value || 'images/fb/logo.jpg'" placeholder="images/fb/post1.jpg অথবা অনলাইন লিংক..." class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none">
+              <input type="text" id="prod-modal-image-url" oninput="document.getElementById('prod-image-preview').src = (typeof fixAssetUrl === 'function' ? fixAssetUrl(this.value) : this.value.replace(/^\/+/, '')) || 'images/fb/logo.jpg'" placeholder="images/fb/post1.jpg অথবা অনলাইন লিংক..." class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none">
               
               <div class="flex items-center gap-2">
                 <label id="btn-upload-label" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-xs cursor-pointer inline-flex items-center gap-1 border border-slate-700">

@@ -1,5 +1,16 @@
 // Sarowar Electric & Hardware - Full-Featured Client App
 
+// Universal asset URL resolver for GitHub Pages & Localhost
+function fixAssetUrl(url) {
+  if (!url || typeof url !== 'string') return 'images/fb/logo.jpg';
+  url = url.trim();
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
+  }
+  const clean = url.replace(/^\/+/, '');
+  return clean || 'images/fb/logo.jpg';
+}
+
 const STATE = {
   lang: localStorage.getItem('seh_lang') || 'bn', // default to Bengali for Natore local audience
   products: [],
@@ -111,6 +122,11 @@ function toggleLanguage() {
   localStorage.setItem('seh_lang', STATE.lang);
   renderLanguage();
   renderCategories();
+  STATE.products = (STATE.products || []).map(p => {
+    p.image_url = fixAssetUrl(p.image_url);
+    return p;
+  });
+
   renderProducts();
 }
 
@@ -312,6 +328,11 @@ async function loadProducts() {
     STATE.products = prods;
     }
   }
+
+  STATE.products = (STATE.products || []).map(p => {
+    p.image_url = fixAssetUrl(p.image_url);
+    return p;
+  });
 
   renderProducts();
 }

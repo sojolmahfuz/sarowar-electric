@@ -484,7 +484,7 @@ app.post('/api/admin/upload', checkAdminAuth, upload.single('image'), (req, res)
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No image file uploaded' });
     }
-    const publicUrl = '/images/products/' + req.file.filename;
+    const publicUrl = 'images/products/' + req.file.filename;
     res.json({ success: true, url: publicUrl, message: 'Image uploaded successfully' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

@@ -198,7 +198,7 @@ function seedInitialData(db) {
         rating: 4.9,
         reviews_count: 28,
         badge: 'Authorized RR Kabel',
-        image_url: '/images/fb/post1.jpg',
+        image_url: 'images/fb/post1.jpg',
         description_en: '100% pure electrolytic high-conductivity copper conductor with Flame Retardant (FR) PVC insulation. Wires without worries for residential building wiring.',
         description_bn: '১০০% বিশুদ্ধ ইলেক্ট্রোলাইটিক কপার কন্ডাক্টর ও ফ্লেম রিটার্ডেন্ট (FR) ইনসুলেশন যুক্ত। বাড়ি ও ফ্ল্যাটের নিরাপদ ওয়্যারিংয়ের সেরা পছন্দ।',
         specs: JSON.stringify({ 'Core': 'Single Core', 'Size': '1.5 RM / 1x1.5 sqmm', 'Insulation': 'Flame Retardant (FR) PVC', 'Standard': 'BDS / IEC 60227', 'Warranty': 'Guaranteed Pure Copper' })
@@ -219,7 +219,7 @@ function seedInitialData(db) {
         rating: 5.0,
         reviews_count: 34,
         badge: 'Heavy Duty',
-        image_url: '/images/fb/product8.jpg',
+        image_url: 'images/fb/product8.jpg',
         description_en: 'Heavy duty 2.5 RM flame retardant cable engineered for power sockets, air conditioners, water pumps, and high-load appliances.',
         description_bn: 'এসি, গিজার, পানির পাম্প ও পাওয়ার সকেটের জন্য মানসম্মত ২.৫ আরএম ফায়ার রিটার্ডেন্ট প্রিমিয়াম কপার তার।',
         specs: JSON.stringify({ 'Core': 'Single Core', 'Size': '2.5 RM / 1x2.5 sqmm', 'Insulation': 'FR PVC Oxygen Index > 29%', 'Current Rating': 'Up to 24 Amps', 'Warranty': 'Authentic Certified' })
@@ -240,7 +240,7 @@ function seedInitialData(db) {
         rating: 4.8,
         reviews_count: 14,
         badge: 'Commercial Grade',
-        image_url: '/images/fb/post1.jpg',
+        image_url: 'images/fb/post1.jpg',
         description_en: 'High amperage 4.0 RM multi-strand copper wire ideal for sub-distribution panels, industrial machinery, and commercial buildings.',
         description_bn: 'শিল্প কারখানা, সাব-ডিস্ট্রিবিউশন প্যানেল ও বাণিজ্যিক ভবনের ভারী লোডের জন্য ৪.০ আরএম ফ্লেক্সিবল তার।',
         specs: JSON.stringify({ 'Size': '4.0 RM', 'Conductor': 'Class 5 Flexible Copper', 'Rated Voltage': '450/750V', 'Standard': 'IS 694 / BDS' })
@@ -261,7 +261,7 @@ function seedInitialData(db) {
         rating: 5.0,
         reviews_count: 42,
         badge: 'Authorized Hamko Dealer',
-        image_url: '/images/fb/product6.jpg',
+        image_url: 'images/fb/product6.jpg',
         description_en: 'Authorized Hamko 165Ah Heavy Duty Tubular Plate Battery. Designed for long power cuts, deep discharge resilience, and 30+ months official warranty.',
         description_bn: 'সারোয়ার ইলেকট্রিক হামকো অর্থরাইজড ডিলার। ১৬৫ অ্যাম্পিয়ার দীর্ঘস্থায়ী টিউবুলার ব্যাটারি, গভীর লোডশেডিংয়ে দীর্ঘ ব্যাকআপের নিশ্চয়তা।',
         specs: JSON.stringify({ 'Brand': 'HAMKO', 'Model': 'HPD 165', 'Capacity': '165 Ah', 'Plate Type': 'Tall Tubular', 'Official Warranty': '30 Months Official Warranty Replacement' })
@@ -282,7 +282,7 @@ function seedInitialData(db) {
         rating: 4.9,
         reviews_count: 31,
         badge: 'Top Choice',
-        image_url: '/images/fb/product7.jpg',
+        image_url: 'images/fb/product7.jpg',
         description_en: 'DSP Pure Sine Wave Technology. Runs 5 Ceiling Fans, 8 LED lights, LED TV, Wi-Fi router smoothly with zero hum and fast battery charging.',
         description_bn: 'ডিএসপি পিওর সাইন ওয়েভ প্রযুক্তি। ৫টি ফ্যান, ৮টি লাইট ও টিভি অনায়াসে চলে। শব্দহীন ও আধুনিক ডিজিটাল ডিসপ্লে।',
         specs: JSON.stringify({ 'Capacity': '1000 VA / 800 Watts', 'Output Waveform': 'Pure Sine Wave', 'Display': 'LCD Multi-Status Screen', 'Warranty': '24 Months Hamko Warranty' })
@@ -303,7 +303,7 @@ function seedInitialData(db) {
         rating: 4.7,
         reviews_count: 19,
         badge: 'Solar Powered',
-        image_url: '/images/fb/product6.jpg',
+        image_url: 'images/fb/product6.jpg',
         description_en: 'Smart hybrid solar inverter seamlessly combining solar panels, battery, and national grid power with built-in MPPT controller for maximum efficiency.',
         description_bn: 'সোলার ও বিদ্যুৎ গ্রিড থেকে স্বয়ংক্রিয় ব্যাটারি চার্জিং সুবিধা ও সর্বোচ্চ বিদ্যুৎ সাশ্রয়কারী আধুনিক সিস্টেম।',
         specs: JSON.stringify({ 'Solar Input': 'Up to 60V MPPT', 'Battery Voltage': '12V DC', 'Efficiency': '> 94%', 'Warranty': '2 Years' })
@@ -324,7 +324,7 @@ function seedInitialData(db) {
         rating: 4.8,
         reviews_count: 53,
         badge: 'Energy Saver',
-        image_url: '/images/fb/cover.jpg',
+        image_url: 'images/fb/cover.jpg',
         description_en: 'Ultra-thin architectural recessed panel light with uniform glare-free daylight white illumination. Aluminum heat sink ensures 25,000+ hours lifespan.',
         description_bn: 'আধুনিক ফলস সিলিংয়ের জন্য অত্যন্ত জনপ্রিয়। চোখের জন্য আরামদায়ক আলো এবং দীর্ঘস্থায়ী অ্যালুমিনিয়াম হিটসিঙ্ক বডি।',
         specs: JSON.stringify({ 'Wattage': '18 Watts', 'Color Temp': '6500K Daylight White / 3000K Warm', 'Hole Cutout': '6 Inch (150mm)', 'Warranty': '2 Years Official Warranty' })
@@ -345,7 +345,7 @@ function seedInitialData(db) {
         rating: 4.9,
         reviews_count: 67,
         badge: 'Best Seller',
-        image_url: '/images/fb/product4.jpg',
+        image_url: 'images/fb/product4.jpg',
         description_en: 'Ready to mount complete fitting tube light. Replaces traditional fluorescent tubes with 85% energy savings and instant flicker-free start.',
         description_bn: 'সম্পূর্ণ ফিটিংস সহ ৪ ফুট এলইডি টিউব লাইট। দোকান, বাড়ি ও কারখানায় উজ্জ্বল আলোর জন্য আদর্শ।',
         specs: JSON.stringify({ 'Length': '4 Feet (1200mm)', 'Power': '20 Watts', 'Luminous Flux': '2200 Lumens', 'Warranty': '1 Year Replacement' })
@@ -366,7 +366,7 @@ function seedInitialData(db) {
         rating: 4.8,
         reviews_count: 22,
         badge: 'Weatherproof',
-        image_url: '/images/fb/cover.jpg',
+        image_url: 'images/fb/cover.jpg',
         description_en: 'Heavy-duty IP66 waterproof and dustproof exterior flood light. Perfect for shop fronts, gardens, parking zones, and roof gardens.',
         description_bn: 'বৃষ্টি ও রোদে নষ্ট না হওয়া আইপি৬৬ ওয়াটারপ্রুফ ফ্লাড লাইট। দোকান বা ভবনের বাইরের অংশ আলোকিত করতে অত্যন্ত কার্যকর।',
         specs: JSON.stringify({ 'Wattage': '50W', 'Waterproof Rating': 'IP66 Waterproof', 'Body': 'Die-cast Aluminum', 'Warranty': '2 Years' })
@@ -387,7 +387,7 @@ function seedInitialData(db) {
         rating: 4.9,
         reviews_count: 38,
         badge: 'Luxury Touch',
-        image_url: '/images/fb/product1.jpg',
+        image_url: 'images/fb/product1.jpg',
         description_en: 'Toughened glass finish modern modular gang switch with silver contact points, LED indicator, and fire-resistant polycarbonate base.',
         description_bn: 'ড্রয়িং রুম ও বেডরুমের আভিজাত্য বাড়াতে টেম্পারড গ্লাস ফিনিশ ৮-গ্যাং মডুলার সুইচ বোর্ড। টেকসই ও রূপালী কন্টাক্ট পয়েন্ট।',
         specs: JSON.stringify({ 'Gangs': '8 Modular Units', 'Plate Material': 'Tempered Scratch-proof Glass', 'Current': '10A / 16A', 'Warranty': '5 Years' })
@@ -408,7 +408,7 @@ function seedInitialData(db) {
         rating: 4.8,
         reviews_count: 45,
         badge: 'Safety First',
-        image_url: '/images/fb/product2.jpg',
+        image_url: 'images/fb/product2.jpg',
         description_en: 'Universal multi-pin power strip with individual switches, overload reset fuse, and 3-meter copper cable for computer & home electronics.',
         description_bn: 'টিভি, কম্পিউটার ও ফ্রিজের জন্য নিরাপদ সার্জ প্রটেক্টর ও ওভারলোড ফিউজযুক্ত উন্নত মাল্টিপ্লাগ।',
         specs: JSON.stringify({ 'Sockets': '4 Universal + 2 USB', 'Cable Length': '3 Meters Pure Copper', 'Max Load': '2500 Watts' })
@@ -429,7 +429,7 @@ function seedInitialData(db) {
         rating: 5.0,
         reviews_count: 29,
         badge: 'Essential Safety',
-        image_url: '/images/fb/product8.jpg',
+        image_url: 'images/fb/product8.jpg',
         description_en: 'Provides instant short-circuit and overload trip protection for entire flat or shop. Standard DIN rail mounting.',
         description_bn: 'পুরো বাসা বা বাণিজ্যিক প্রতিষ্ঠানের শর্ট সার্কিট ও ওভারলোড থেকে রক্ষায় মূল মেইন সার্কিট ব্রেকার।',
         specs: JSON.stringify({ 'Rated Current': '63 Amps', 'Poles': '2 Pole (DP)', 'Breaking Capacity': '6kA / 10kA', 'Standard': 'IEC 60898-1' })
@@ -450,7 +450,7 @@ function seedInitialData(db) {
         rating: 4.7,
         reviews_count: 17,
         badge: 'Rust Proof',
-        image_url: '/images/fb/product1.jpg',
+        image_url: 'images/fb/product1.jpg',
         description_en: 'Heavy gauge powder-coated sheet metal enclosure with copper neutral/earth link bars and smoke-tinted transparent door.',
         description_bn: 'মজবুত পাউডার কোটেড মেটাল বডি এবং সুরক্ষিত নিউট্রাল-আর্থ কপার লিংক বার সহ ৮-ওয়ে ডিবি বক্স।',
         specs: JSON.stringify({ 'Capacity': '8 Modules', 'Material': 'CRCA Sheet Steel 1.2mm', 'Protection': 'IP40' })
@@ -471,7 +471,7 @@ function seedInitialData(db) {
         rating: 4.9,
         reviews_count: 50,
         badge: 'Concealed Wiring',
-        image_url: '/images/fb/logo.jpg',
+        image_url: 'images/fb/logo.jpg',
         description_en: 'Unbreakable fire retardant rigid PVC electrical pipe for wall concealment, ceiling casting, and underground wiring protection.',
         description_bn: 'দেয়াল ও ছাদ ঢালাইয়ের ভেতর গোপন ওয়্যারিংয়ের জন্য মজবুত এবং সহজে না ভাঙা প্রিমিয়াম পিভিসি পাইপ।',
         specs: JSON.stringify({ 'Diameter': '1 Inch (25mm)', 'Length': '10 Feet', 'Type': 'Rigid Heavy Duty PVC' })
@@ -492,7 +492,7 @@ function seedInitialData(db) {
         rating: 4.9,
         reviews_count: 48,
         badge: 'High Air Delivery',
-        image_url: '/images/fb/cover.jpg',
+        image_url: 'images/fb/cover.jpg',
         description_en: 'High-speed aerodynamic blades with 99.9% pure copper motor winding. High air delivery with whisper-quiet operation and low electricity consumption.',
         description_bn: '৯৯.৯% খাঁটি তামার তারের কয়েল এবং অ্যারোডাইনামিক ব্লেড। বিদ্যুৎ সাশ্রয়ী ও দীর্ঘস্থায়ী বাতাস।',
         specs: JSON.stringify({ 'Sweep': '56 Inch (1400mm)', 'Power': '70 Watts', 'Speed': '320 RPM', 'Warranty': '2 Years Replacement Guarantee' })
