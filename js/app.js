@@ -354,17 +354,22 @@ function renderProducts() {
               ` : ''}
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
-              <button onclick="addToCart(${p.id})" class="w-full py-2 px-3 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-orange-600/20">
+            <div class="grid grid-cols-2 gap-2 mb-2">
+              <button onclick="addToCart(${p.id})" class="w-full py-2 px-2 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 shadow-sm shadow-orange-600/20" title="${isBn ? 'কার্টে যোগ করুন' : 'Add to Cart'}">
                 <i class="fas fa-cart-plus"></i>
                 <span>${isBn ? 'কার্ট' : 'Add Cart'}</span>
               </button>
 
-              <button onclick="orderViaWhatsApp(${p.id})" class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-600/20">
-                <i class="fab fa-whatsapp text-sm"></i>
-                <span>${isBn ? 'অর্ডার' : 'WhatsApp'}</span>
+              <button onclick="buyNow(${p.id})" class="w-full py-2 px-2 bg-slate-900 hover:bg-slate-800 active:bg-black text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 shadow-sm" title="${isBn ? 'সরাসরি অর্ডার করুন' : 'Buy Now'}">
+                <i class="fas fa-bolt text-amber-400"></i>
+                <span>${isBn ? 'কিনুন' : 'Buy Now'}</span>
               </button>
             </div>
+
+            <button onclick="orderViaWhatsApp(${p.id})" class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-600/20">
+              <i class="fab fa-whatsapp text-sm"></i>
+              <span>${isBn ? 'হোয়াটসঅ্যাপে অর্ডার' : 'Order on WhatsApp'}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -463,12 +468,15 @@ function openProductQuickView(id) {
           ` : ''}
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-200">
-          <button onclick="addToCart(${product.id}); closeProductModal();" class="flex-1 py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-orange-600/20">
-            <i class="fas fa-cart-plus"></i> ${isBn ? 'কার্টে যোগ করুন' : 'Add to Cart'}
+        <div class="flex flex-col sm:flex-row gap-2 pt-4 border-t border-slate-200">
+          <button onclick="addToCart(${product.id}); closeProductModal();" class="flex-1 py-3 px-3 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-orange-600/20">
+            <i class="fas fa-cart-plus"></i> ${isBn ? 'কার্টে যোগ' : 'Add to Cart'}
           </button>
-          <button onclick="orderViaWhatsApp(${product.id}); closeProductModal();" class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20">
-            <i class="fab fa-whatsapp text-lg"></i> ${isBn ? 'হোয়াটসঅ্যাপ অর্ডার' : 'WhatsApp Order'}
+          <button onclick="buyNow(${product.id}); closeProductModal();" class="flex-1 py-3 px-3 bg-slate-900 hover:bg-black text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-md">
+            <i class="fas fa-bolt text-amber-400"></i> ${isBn ? 'সরাসরি কিনুন' : 'Buy Now'}
+          </button>
+          <button onclick="orderViaWhatsApp(${product.id}); closeProductModal();" class="flex-1 py-3 px-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20">
+            <i class="fab fa-whatsapp text-sm"></i> ${isBn ? 'হোয়াটসঅ্যাপ' : 'WhatsApp'}
           </button>
         </div>
       </div>
@@ -491,7 +499,7 @@ function initCart() {
   renderCartDrawer();
 }
 
-function addToCart(productId) {
+function addToCart(productId, openDrawer = false) {
   const product = STATE.products.find(p => p.id === productId);
   if (!product) return;
 
@@ -514,7 +522,17 @@ function addToCart(productId) {
   saveCart();
   updateCartBadge();
   renderCartDrawer();
-  showToast(STATE.lang === 'bn' ? 'পণ্যটি কার্টে যোগ করা হয়েছে!' : 'Product added to cart!');
+  if (openDrawer) {
+    toggleCartDrawer(true);
+    const details = document.getElementById('checkout-details');
+    if (details) details.open = true;
+  } else {
+    showToast(STATE.lang === 'bn' ? 'পণ্যটি কার্টে যোগ করা হয়েছে!' : 'Product added to cart!');
+  }
+}
+
+function buyNow(productId) {
+  addToCart(productId, true);
 }
 
 function updateCartQuantity(productId, delta) {
@@ -883,7 +901,6 @@ async function trackOrder() {
       </div>
     `;
   }
-}
 }
 
 // ==========================================

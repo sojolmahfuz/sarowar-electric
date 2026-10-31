@@ -327,3 +327,4 @@ function fixAssetUrl(url) {
   if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
   return url.replace(/^\//, '');
 }
+
