@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="bn" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>এডমিন কন্ট্রোল প্যানেল | Sarowar Electric & Hardware Admin Dashboard</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="images/fb/logo.jpg">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    @media print {
+      body * { visibility: hidden; }
+      #printable-invoice-content, #printable-invoice-content * { visibility: visible; }
+      #printable-invoice-content { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-950 text-slate-100 font-bengali antialiased flex flex-col">
+
+  <!-- 1. ADMIN PIN LOGIN SCREEN (Shown if not authenticated) -->
+  <div id="admin-login-card" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center space-y-6">
+      
+      <div class="relative w-20 h-20 mx-auto rounded-2xl overflow-hidden border-2 border-orange-500/50 shadow-xl shadow-orange-500/20 bg-slate-800">
+        <img src="images/fb/logo.jpg" alt="Sarowar Electric" class="w-full h-full object-cover">
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-black text-white">সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার</h2>
+        <span class="text-xs font-bold text-orange-400 uppercase tracking-widest block mt-1">Admin Control Console</span>
+        <p class="text-xs text-slate-400 mt-2">দোকানের সকল মালামাল, অর্ডার, কোটেশন ও ওয়েবসাইট সেটিংস নিয়ন্ত্রণে ৪ ডিজিটের পিন দিন।</p>
+      </div>
+
+      <form onsubmit="submitAdminLogin(event)" class="space-y-4">
+        <div>
+          <input type="password" id="login-pin-input" required autofocus placeholder="Admin PIN (Default: 1234)" class="w-full py-3.5 px-4 text-center text-2xl tracking-[0.3em] font-black rounded-2xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500 transition shadow-inner">
+          <p id="login-error-msg" class="text-xs text-red-400 font-bold mt-2 hidden"></p>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-extrabold rounded-2xl text-sm transition shadow-lg shadow-orange-600/30 flex items-center justify-center gap-2">
+          <i class="fas fa-lock-open"></i>
+          <span>ড্যাশবোর্ডে প্রবেশ করুন</span>
+        </button>
+      </form>
+
+      <div class="pt-4 border-t border-slate-800 text-xs text-slate-400">
+        <a href="index.html" class="text-orange-400 hover:underline flex items-center justify-center gap-1.5 font-semibold">
+          <i class="fas fa-arrow-left text-[11px]"></i> পাবলিক ওয়েবসাইটে ফিরে যান
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MAIN ADMIN DASHBOARD LAYOUT -->
+  <div id="admin-dashboard-layout" class="flex-1 flex overflow-hidden hidden">
+
+    <!-- A. SIDEBAR NAVIGATION -->
+    <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between flex-shrink-0 z-30">
+      
+      <!-- Brand & Store Title -->
+      <div>
+        <div class="p-4 border-b border-slate-800 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl overflow-hidden border border-orange-500/40 flex-shrink-0 bg-slate-800">
+            <img src="images/fb/logo.jpg" alt="Logo" class="w-full h-full object-cover">
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-sm font-black text-white truncate leading-tight">সারোয়ার ইলেকট্রিক</h1>
+            <span class="text-[10px] font-bold text-orange-400 uppercase tracking-wider block">Admin Management</span>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="p-3 space-y-1.5 text-xs font-bold">
+          <button onclick="switchTab('overview')" data-tab="overview" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition bg-orange-600 text-white">
+            <i class="fas fa-chart-pie w-4 text-center"></i>
+            <span>ড্যাশবোর্ড ওভারভিউ</span>
+          </button>
+
+          <button onclick="switchTab('products')" data-tab="products" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition text-slate-300 hover:bg-slate-800">
+            <i class="fas fa-boxes-stacked w-4 text-center text-orange-400"></i>
+            <span>পণ্য ও ইনভেন্টরি কন্ট্রোল</span>
+          </button>
+
+          <button onclick="switchTab('orders')" data-tab="orders" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition text-slate-300 hover:bg-slate-800">
+            <i class="fas fa-shopping-cart w-4 text-center text-emerald-400"></i>
+            <span>অনলাইন অর্ডার ও ইনভয়েস</span>
+          </button>
+
+          <button onclick="switchTab('quotations')" data-tab="quotations" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition text-slate-300 hover:bg-slate-800">
+            <i class="fas fa-file-invoice-dollar w-4 text-center text-blue-400"></i>
+            <span>হোলসেল ও ঠিকাদার কোটেশন</span>
+          </button>
+
+          <button onclick="switchTab('services')" data-tab="services" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition text-slate-300 hover:bg-slate-800">
+            <i class="fas fa-tools w-4 text-center text-purple-400"></i>
+            <span>ইলেকট্রিশিয়ান বুকিং সেবা</span>
+          </button>
+
+          <button onclick="switchTab('reviews')" data-tab="reviews" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition text-slate-300 hover:bg-slate-800">
+            <i class="fas fa-star w-4 text-center text-amber-400"></i>
+            <span>গ্রাহক মতামত ও রিভিউ</span>
+          </button>
+
+          <button onclick="switchTab('settings')" data-tab="settings" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition text-slate-300 hover:bg-slate-800">
+            <i class="fas fa-cog w-4 text-center text-slate-400"></i>
+            <span>দোকান সেটিংস ও পিন কোড</span>
+          </button>
+
+          <button onclick="switchTab('database')" data-tab="database" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition text-slate-300 hover:bg-slate-800">
+            <i class="fas fa-database w-4 text-center text-cyan-400"></i>
+            <span>ডাটাবেস ব্যাকআপ ও SQL</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bottom User / External Link Section -->
+      <div class="p-3 border-t border-slate-800 space-y-2">
+        <a href="index.html" target="_blank" class="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition">
+          <span class="flex items-center gap-2">
+            <i class="fas fa-external-link-alt text-orange-400"></i> পাবলিক শপ দেখুন
+          </span>
+          <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+        </a>
+
+        <button onclick="adminLogout()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white text-xs font-bold transition">
+          <i class="fas fa-sign-out-alt"></i> লগআউট
+        </button>
+      </div>
+    </aside>
+
+    <!-- B. MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-950 overflow-y-auto">
+      
+      <!-- Top Header Bar -->
+      <header class="sticky top-0 z-20 bg-slate-900/90 backdrop-blur border-b border-slate-800 px-6 py-3.5 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-orange-600/20 text-orange-400 border border-orange-500/30">
+            <i class="fas fa-shield-alt mr-1"></i> সর্বময় কন্ট্রোল মোড
+          </span>
+          <span class="text-xs text-slate-400 hidden sm:inline">
+            মিশন হাসপাতাল, ঢাকা রোড, বড় হরিশপুর, নাটোর
+          </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button onclick="openAddProductModal()" class="px-3.5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-orange-600/20 transition">
+            <i class="fas fa-plus"></i>
+            <span>নতুন পণ্য যোগ করুন</span>
+          </button>
+
+          <button onclick="exportFullDatabaseBackup()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs transition" title="ডাউনলোড ডাটাবেস ব্যাকআপ">
+            <i class="fas fa-download"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB PANELS CONTAINER -->
+      <div class="p-6 space-y-6">
+
+        <!-- ============================================== -->
+        <!-- TAB 1: OVERVIEW & ANALYTICS -->
+        <!-- ============================================== -->
+        <div id="tab-overview" class="tab-panel space-y-6">
+          <div>
+            <h2 class="text-xl font-black text-white">ড্যাশবোর্ড ওভারভিউ & পরিসংখ্যান</h2>
+            <p class="text-xs text-slate-400">দোকানের লাইভ বিক্রয়, ইনভেন্টরি ও সার্ভিস রিকোয়েস্টের সার্বিক চিত্র।</p>
+          </div>
+
+          <!-- Top Metric Cards Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 shadow-sm">
+              <span class="text-slate-400 text-[11px] block font-medium">মোট বিক্রয় রেভিনিউ</span>
+              <strong id="stat-total-revenue" class="text-xl font-black text-emerald-400 block mt-1">৳0</strong>
+              <span class="text-[10px] text-slate-400">অনলাইন অর্ডার থেকে</span>
+            </div>
+
+            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 shadow-sm">
+              <span class="text-slate-400 text-[11px] block font-medium">মোট অর্ডার</span>
+              <strong id="stat-total-orders" class="text-2xl font-black text-white block mt-1">0</strong>
+              <div class="flex items-center gap-2 mt-0.5 text-[10px] text-slate-400">
+                <span>কনফার্মড: <strong id="stat-confirmed-orders" class="text-blue-400 font-bold">0</strong></span>
+                <span>ডেলিভার্ড: <strong id="stat-delivered-orders" class="text-emerald-400 font-bold">0</strong></span>
+              </div>
+            </div>
+
+            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 shadow-sm">
+              <span class="text-slate-400 text-[11px] block font-medium">অপেক্ষমাণ অর্ডার</span>
+              <strong id="stat-pending-orders" class="text-2xl font-black text-amber-400 block mt-1">0</strong>
+              <span class="text-[10px] text-amber-500/80 font-bold">কনফার্মেশন প্রয়োজন</span>
+            </div>
+
+            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 shadow-sm">
+              <span class="text-slate-400 text-[11px] block font-medium">হোলসেল কোটেশন</span>
+              <strong id="stat-pending-quotes" class="text-2xl font-black text-blue-400 block mt-1">0</strong>
+              <span class="text-[10px] text-blue-400 font-bold">ঠিকাদার কোটেশন</span>
+            </div>
+
+            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 shadow-sm">
+              <span class="text-slate-400 text-[11px] block font-medium">ইলেকট্রিশিয়ান সার্ভিস</span>
+              <strong id="stat-pending-services" class="text-2xl font-black text-purple-400 block mt-1">0</strong>
+              <span class="text-[10px] text-purple-400 font-bold">টেকনিশিয়ান রিকোয়েস্ট</span>
+            </div>
+
+            <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 shadow-sm">
+              <span class="text-slate-400 text-[11px] block font-medium">সক্রিয় পণ্য তালিকা</span>
+              <strong id="stat-total-products" class="text-2xl font-black text-orange-400 block mt-1">0</strong>
+              <span class="text-[10px] text-slate-400">ক্যাটালগ আইটেম</span>
+            </div>
+          </div>
+
+          <!-- Secondary Metrics & Alerts -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left: Low Stock Alert List -->
+            <div class="lg:col-span-7 bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-sm space-y-3">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-exclamation-triangle text-amber-500"></i>
+                  <h3 class="text-sm font-extrabold text-white">কম স্টক সতর্কবার্তা (Low Stock Alerts)</h3>
+                </div>
+                <span id="stat-low-stock" class="px-2 py-0.5 rounded-full text-xs font-black bg-red-500/20 text-red-400 border border-red-500/30">0</span>
+              </div>
+
+              <div id="overview-low-stock-list" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Right: Category Breakdown -->
+            <div class="lg:col-span-5 bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-sm space-y-3">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-layer-group text-blue-400"></i>
+                  <h3 class="text-sm font-extrabold text-white">ক্যাটাগরি ভিত্তিক স্টক</h3>
+                </div>
+                <span class="text-xs text-slate-400">৭টি প্রধান বিভাগ</span>
+              </div>
+
+              <div id="overview-category-stats" class="space-y-2">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: PRODUCTS & INVENTORY CONTROL (CRUD) -->
+        <!-- ============================================== -->
+        <div id="tab-products" class="tab-panel space-y-5 hidden">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-black text-white">পণ্য ও ইনভেন্টরি ম্যানেজমেন্ট</h2>
+              <p class="text-xs text-slate-400">মূল্য পরিবর্তন, নতুন পণ্য যোগ, স্টক সংখ্যা ও ফিচার্ড স্ট্যাটাস নিয়ন্ত্রণ।</p>
+            </div>
+
+            <button onclick="openAddProductModal()" class="px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-orange-600/30 transition self-start sm:self-auto">
+              <i class="fas fa-plus"></i> নতুন পণ্য যোগ করুন
+            </button>
+          </div>
+
+          <!-- Filters Bar -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-900 rounded-2xl border border-slate-800 text-xs">
+            <div class="relative">
+              <input type="text" oninput="ADMIN.filters.productSearch = this.value; renderProductsTable();" placeholder="পণ্য বা ব্র্যান্ড খুঁজুন..." class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500 font-medium">
+              <i class="fas fa-search absolute left-3 top-2.5 text-slate-500"></i>
+            </div>
+
+            <div>
+              <select id="prod-filter-category" onchange="ADMIN.filters.productCategory = this.value; renderProductsTable();" class="w-full py-2 px-3 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500 font-medium">
+                <option value="all">সকল ক্যাটাগরি</option>
+              </select>
+            </div>
+
+            <div class="flex items-center justify-end text-slate-400 font-semibold px-2">
+              <span>মোট পণ্য: <strong id="filter-product-count" class="text-white">15</strong></span>
+            </div>
+          </div>
+
+          <!-- Products Table -->
+          <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-xl overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-950/80 border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 font-black">
+                    <th class="py-3 px-3">পণ্য বিবরণ</th>
+                    <th class="py-3 px-3">ক্যাটাগরি</th>
+                    <th class="py-3 px-3">মূল্য ও হোলসেল</th>
+                    <th class="py-3 px-3">স্টক সংখ্যা</th>
+                    <th class="py-3 px-3 text-center">ফিচার্ড</th>
+                    <th class="py-3 px-3 text-center">স্টক অবস্থা</th>
+                    <th class="py-3 px-3 text-right">অ্যাকশন</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-products-table-body">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 3: ORDERS MANAGEMENT & INVOICING -->
+        <!-- ============================================== -->
+        <div id="tab-orders" class="tab-panel space-y-5 hidden">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-black text-white">অনলাইন অর্ডার প্রসেসিং & ইনভয়েস</h2>
+              <p class="text-xs text-slate-400">অর্ডার স্ট্যাটাস পরিবর্তন, চালান প্রিন্ট এবং গ্রাহককে WhatsApp এ আপডেট পাঠানো।</p>
+            </div>
+
+            <!-- Status Tabs -->
+            <div class="flex items-center gap-1.5 overflow-x-auto p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs font-bold">
+              <button onclick="ADMIN.filters.orderStatus = 'all'; renderOrdersTable();" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">সকল</button>
+              <button onclick="ADMIN.filters.orderStatus = 'Pending'; renderOrdersTable();" class="px-3 py-1.5 rounded-lg text-amber-400 hover:bg-slate-800 transition">Pending</button>
+              <button onclick="ADMIN.filters.orderStatus = 'Confirmed'; renderOrdersTable();" class="px-3 py-1.5 rounded-lg text-blue-400 hover:bg-slate-800 transition">Confirmed</button>
+              <button onclick="ADMIN.filters.orderStatus = 'Shipped'; renderOrdersTable();" class="px-3 py-1.5 rounded-lg text-indigo-400 hover:bg-slate-800 transition">Shipped</button>
+              <button onclick="ADMIN.filters.orderStatus = 'Delivered'; renderOrdersTable();" class="px-3 py-1.5 rounded-lg text-emerald-400 hover:bg-slate-800 transition">Delivered</button>
+            </div>
+          </div>
+
+          <!-- Orders Data Table -->
+          <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-xl overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-950/80 border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 font-black">
+                    <th class="py-3 px-3">অর্ডার আইডি ও সময়</th>
+                    <th class="py-3 px-3">গ্রাহক ও মোবাইল</th>
+                    <th class="py-3 px-3">ডেলিভারি ঠিকানা</th>
+                    <th class="py-3 px-3">বিল ও পেমেন্ট</th>
+                    <th class="py-3 px-3">স্ট্যাটাস পরিবর্তন</th>
+                    <th class="py-3 px-3 text-right">ইনভয়েস / যোগাযোগ</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-table-body">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 4: WHOLESALE QUOTATIONS (CONTRACTORS) -->
+        <!-- ============================================== -->
+        <div id="tab-quotations" class="tab-panel space-y-5 hidden">
+          <div>
+            <h2 class="text-xl font-black text-white">ঠিকাদার ও হোলসেল কোটেশন রিকোয়েস্ট</h2>
+            <p class="text-xs text-slate-400">বিল্ডিং প্রজেক্ট, কারিগর ও হোলসেল ক্রেতাদের মালামালের তালিকা ও রেট কোটেশন।</p>
+          </div>
+
+          <div id="admin-quotes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 5: ELECTRICIAN SERVICE BOOKINGS -->
+        <!-- ============================================== -->
+        <div id="tab-services" class="tab-panel space-y-5 hidden">
+          <div>
+            <h2 class="text-xl font-black text-white">ইলেকট্রিশিয়ান সার্ভিস বুকিং তালিকা</h2>
+            <p class="text-xs text-slate-400">নাটোর শহরের গ্রাহকদের হাউজ ওয়্যারিং, আইপিএস সেটআপ ও লাইন মেরামতের রিকোয়েস্ট।</p>
+          </div>
+
+          <div id="admin-services-list" class="space-y-3">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 6: CUSTOMER REVIEWS MANAGEMENT -->
+        <!-- ============================================== -->
+        <div id="tab-reviews" class="tab-panel space-y-6 hidden">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-black text-white">গ্রাহক মতামত ও রিভিউ কন্ট্রোল</h2>
+              <p class="text-xs text-slate-400">ওয়েবসাইটে প্রকাশিত রিভিউ মডারেশন এবং শোরুমের কাস্টমার রিভিউ সরাসরি যোগ করুন।</p>
+            </div>
+
+            <button onclick="document.getElementById('manual-review-box').classList.toggle('hidden')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition">
+              <i class="fas fa-plus mr-1"></i> শোরুম রিভিউ যুক্ত করুন
+            </button>
+          </div>
+
+          <!-- Add Manual Review Box -->
+          <div id="manual-review-box" class="p-5 bg-slate-900 rounded-3xl border border-slate-800 shadow-md hidden">
+            <h4 class="text-sm font-bold text-white mb-3">নতুন গ্রাহক রিভিউ যুক্ত করুন</h4>
+            <form id="manual-review-form" onsubmit="submitManualReview(event)" class="space-y-3 text-xs">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <input type="text" id="manual-rev-name" required placeholder="গ্রাহকের নাম (যেমন: মোঃ আসাদুল ইসলাম)" class="p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500 font-medium">
+                <input type="text" id="manual-rev-loc" placeholder="লোকেশন (যেমন: বড় হরিশপুর, নাটোর)" class="p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500 font-medium">
+                <select id="manual-rev-rating" class="p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500 font-bold">
+                  <option value="5">⭐⭐⭐⭐⭐ (৫ স্টার)</option>
+                  <option value="4">⭐⭐⭐⭐ (৪ স্টার)</option>
+                  <option value="3">⭐⭐⭐ (৩ স্টার)</option>
+                </select>
+              </div>
+              <textarea id="manual-rev-comment" required rows="2" placeholder="গ্রাহকের মন্তব্য বা প্রশংসাপত্র..." class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500 font-medium"></textarea>
+              <button type="submit" class="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs shadow-md">
+                রিভিউ সেভ করুন
+              </button>
+            </form>
+          </div>
+
+          <!-- Reviews Grid -->
+          <div id="admin-reviews-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 7: WEBSITE & STORE SETTINGS + PIN -->
+        <!-- ============================================== -->
+        <div id="tab-settings" class="tab-panel space-y-6 hidden">
+          <div>
+            <h2 class="text-xl font-black text-white">দোকানের তথ্য ও সিস্টেম সেটিংস</h2>
+            <p class="text-xs text-slate-400">মোবাইল নম্বর, শোরুম ঠিকানা, সময়সূচি ও এডমিন পিন পরিবর্তন করুন।</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Store Profile Settings Form -->
+            <div class="lg:col-span-8 bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-md">
+              <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-store text-orange-400"></i> শোরুম ও পাবলিক কন্টাক্ট তথ্য
+              </h3>
+
+              <form onsubmit="submitStoreSettings(event)" class="space-y-4 text-xs font-medium">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-slate-400 mb-1">দোকানের নাম (বাংলা)</label>
+                    <input type="text" id="set-store-name-bn" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Store Name (English)</label>
+                    <input type="text" id="set-store-name-en" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label class="block text-slate-400 mb-1">প্রধান হটলাইন নম্বর *</label>
+                    <input type="text" id="set-phone-primary" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500 font-bold">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">বিকল্প নম্বর ২</label>
+                    <input type="text" id="set-phone-secondary" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">বিকল্প নম্বর ৩</label>
+                    <input type="text" id="set-phone-alt" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-slate-400 mb-1">WhatsApp নম্বর (Country code সহ, e.g. 8801780904878)</label>
+                    <input type="text" id="set-whatsapp" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500 font-bold text-emerald-400">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">ইমেইল ঠিকানা</label>
+                    <input type="email" id="set-email" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-slate-400 mb-1">শোরুমের সঠিক ঠিকানা (বাংলা)</label>
+                    <input type="text" id="set-address-bn" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">Showroom Address (English)</label>
+                    <input type="text" id="set-address-en" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-slate-400 mb-1">দোকান খোলা থাকার সময়সূচি</label>
+                  <input type="text" id="set-business-hours" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                </div>
+
+                <div>
+                  <label class="block text-slate-400 mb-1">ব্যানার ট্যাগলাইন</label>
+                  <input type="text" id="set-tagline-bn" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                </div>
+
+                <button type="submit" class="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs shadow-md shadow-orange-600/20">
+                  সেটিংস সংরক্ষণ করুন
+                </button>
+              </form>
+            </div>
+
+            <!-- Change PIN Form -->
+            <div class="lg:col-span-4 bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-md flex flex-col justify-between">
+              <div>
+                <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                  <i class="fas fa-key text-amber-400"></i> এডমিন পিন কোড পরিবর্তন
+                </h3>
+                <p class="text-xs text-slate-400 mb-4">নিরাপত্তার স্বার্থে আপনার পছন্দ অনুযায়ী ৪ বা ততোধিক ডিজিটের নতুন পিন সেট করুন।</p>
+
+                <form id="change-pin-form" onsubmit="submitChangePin(event)" class="space-y-3 text-xs font-medium">
+                  <div>
+                    <label class="block text-slate-400 mb-1">বর্তমান পিন (Current PIN)</label>
+                    <input type="password" id="pin-current" required placeholder="বর্তমান পিন" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">নতুন পিন (New PIN)</label>
+                    <input type="password" id="pin-new" required placeholder="নতুন পিন" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                  <div>
+                    <label class="block text-slate-400 mb-1">নতুন পিন নিশ্চিত করুন</label>
+                    <input type="password" id="pin-confirm" required placeholder="কনফার্ম করুন" class="w-full p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500">
+                  </div>
+                  <button type="submit" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition border border-slate-700">
+                    পিন আপডেট করুন
+                  </button>
+                </form>
+              </div>
+
+              <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl mt-4 text-[11px] text-amber-300">
+                <i class="fas fa-info-circle mr-1"></i> ডিফল্ট পিন ছিল <strong>1234</strong>। নতুন পিন ভুলে গেলে সার্ভার ডেটাবেস থেকে রিসেট করা যাবে।
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 8: DATABASE TOOLS & BACKUP -->
+        <!-- ============================================== -->
+        <div id="tab-database" class="tab-panel space-y-6 hidden">
+          <div>
+            <h2 class="text-xl font-black text-white">ডাটাবেস টুলস & সিস্টেম ব্যাকআপ</h2>
+            <p class="text-xs text-slate-400">সম্পূর্ণ ওয়েবসাইটের ডাটাবেস এক্সপোর্ট, রিস্টোর, ফ্যাক্টরি রিসেট এবং কাস্টম SQL কুয়েরি।</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            
+            <!-- Tool 1: Export Backup -->
+            <div class="p-5 bg-slate-900 rounded-3xl border border-slate-800 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg mb-3">
+                  <i class="fas fa-download"></i>
+                </div>
+                <h3 class="font-bold text-white text-sm mb-1">ডাটাবেস ব্যাকআপ (JSON)</h3>
+                <p class="text-xs text-slate-400 mb-4">সকল পণ্য, অর্ডার, কোটেশন ও কাস্টমার রিভিউ এক ক্লিকে অফলাইনে ডাউনলোড করে সংরক্ষণ করুন।</p>
+              </div>
+              <button onclick="exportFullDatabaseBackup()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2">
+                <i class="fas fa-file-download"></i> ব্যাকআপ ডাউনলোড
+              </button>
+            </div>
+
+            <!-- Tool 2: Restore Backup -->
+            <div class="p-5 bg-slate-900 rounded-3xl border border-slate-800 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg mb-3">
+                  <i class="fas fa-upload"></i>
+                </div>
+                <h3 class="font-bold text-white text-sm mb-1">ব্যাকআপ ফাইল রিস্টোর</h3>
+                <p class="text-xs text-slate-400 mb-4">পূর্বে ডাউনলোড করা যেকোনো JSON ব্যাকআপ ফাইল সিলেক্ট করে ডাটাবেস পুনরুদ্ধার করুন।</p>
+              </div>
+              <label class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fas fa-file-upload"></i> ফাইল থেকে রিস্টোর
+                <input type="file" accept=".json" onchange="restoreDatabaseFromFile(event)" class="hidden">
+              </label>
+            </div>
+
+            <!-- Tool 3: Factory Reset -->
+            <div class="p-5 bg-slate-900 rounded-3xl border border-slate-800 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg mb-3">
+                  <i class="fas fa-trash-restore"></i>
+                </div>
+                <h3 class="font-bold text-white text-sm mb-1">ফ্যাক্টরি ডাটাবেস রিসেট</h3>
+                <p class="text-xs text-slate-400 mb-4">প্রয়োজনে সম্পূর্ণ ডাটাবেস পুনরায় ডিফল্ট শোরুম সিড ডেটায় ফিরিয়ে নিতে এই বাটন ব্যবহার করুন।</p>
+              </div>
+              <button onclick="resetDatabaseToDefault()" class="w-full py-2.5 bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 border border-red-500/40 transition">
+                <i class="fas fa-redo"></i> ডিফল্ট ডেটায় রিসেট
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Raw SQL Query Console -->
+          <div class="p-6 bg-slate-900 rounded-3xl border border-slate-800 shadow-md space-y-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fas fa-terminal text-emerald-400"></i> এডভান্সড SQL কুয়েরি এক্সিকিউটর
+            </h3>
+            <p class="text-xs text-slate-400">সরাসরি SQLite ডেটাবেসে যেকোনো SQL কুয়েরি চালান (যেমন: <code>SELECT * FROM products;</code>)</p>
+
+            <div class="flex gap-2">
+              <input type="text" id="sql-query-input" value="SELECT id, title_bn, brand, price, stock_qty FROM products LIMIT 5;" placeholder="SQL statement লিখুন..." class="flex-1 p-2.5 bg-slate-950 border border-slate-700 rounded-xl font-mono text-xs text-emerald-400 outline-none focus:border-orange-500">
+              <button onclick="executeCustomSql()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+                <i class="fas fa-play"></i> Run SQL
+              </button>
+            </div>
+
+            <pre id="sql-result-output" class="p-4 bg-slate-950 rounded-2xl border border-slate-800 text-[11px] font-mono text-slate-300 max-h-64 overflow-y-auto whitespace-pre-wrap">Query results will appear here...</pre>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- 3. PRODUCT ADD / EDIT MODAL -->
+  <div id="product-crud-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto p-6 shadow-2xl relative text-xs">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+        <h3 id="product-modal-title" class="text-base font-extrabold text-white">নতুন পণ্য যোগ করুন</h3>
+        <button onclick="closeProductCrudModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="product-form" onsubmit="submitProductForm(event)" class="space-y-4">
+        <input type="hidden" id="prod-modal-id">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">পণ্যের নাম (বাংলা) *</label>
+            <input type="text" id="prod-modal-title-bn" required placeholder="যেমন: আর আর কেবল ১.৫ আরএম" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500 font-bold">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Product Title (English) *</label>
+            <input type="text" id="prod-modal-title-en" required placeholder="e.g. RR Kabel Superex FR 1.5 RM" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">ক্যাটাগরি *</label>
+            <select id="prod-modal-category" required class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500 font-bold">
+              <!-- Injected via JS -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">ব্র্যান্ড *</label>
+            <input type="text" id="prod-modal-brand" required placeholder="RR Kabel / Hamko / Super Star" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500 font-bold">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">ইউনিট *</label>
+            <input type="text" id="prod-modal-unit" required placeholder="Coil (100m) / Piece / Set" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">খুচরা মূল্য (৳) *</label>
+            <input type="number" id="prod-modal-price" required min="1" placeholder="3850" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-orange-400 font-extrabold outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">পূর্বের মূল্য (ছাড়)</label>
+            <input type="number" id="prod-modal-original-price" placeholder="4200" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-300 outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">হোলসেল মূল্য (৳)</label>
+            <input type="number" id="prod-modal-wholesale-price" placeholder="3650" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-blue-400 font-bold outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">হোলসেল নূন্যতম সংখ্যা</label>
+            <input type="number" id="prod-modal-wholesale-qty" placeholder="5" value="5" min="1" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">স্টক সংখ্যা *</label>
+            <input type="number" id="prod-modal-stock-qty" required min="0" value="50" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold outline-none focus:border-orange-500">
+          </div>
+        </div>
+
+        <!-- Image Upload & URL -->
+        <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
+          <label class="block text-slate-400 font-bold mb-2">পণ্যের ছবি (URL দিন অথবা সরাসরি ফোন/ল্যাপটপ থেকে আপলোড করুন)</label>
+          <div class="flex items-center gap-3">
+            <img id="prod-image-preview" src="images/fb/logo.jpg" class="w-16 h-16 object-contain bg-slate-900 rounded-xl border border-slate-700 p-1 flex-shrink-0">
+            <div class="flex-1 space-y-2">
+              <input type="text" id="prod-modal-image-url" oninput="document.getElementById('prod-image-preview').src = this.value || 'images/fb/logo.jpg'" placeholder="images/fb/post1.jpg অথবা অনলাইন লিংক..." class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none">
+              
+              <div class="flex items-center gap-2">
+                <label id="btn-upload-label" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-lg text-xs cursor-pointer inline-flex items-center gap-1 border border-slate-700">
+                  <i class="fas fa-upload mr-1"></i> ছবি আপলোড
+                  <input type="file" accept="image/*" onchange="handleImageFileUpload(event)" class="hidden">
+                </label>
+                <input type="text" id="prod-modal-badge" placeholder="Badge (যেমন: Authorized Hamko / Best Seller)" class="flex-1 p-1.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white outline-none">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Descriptions -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">সংক্ষিপ্ত বিবরণ (বাংলা)</label>
+            <textarea id="prod-modal-desc-bn" rows="2" placeholder="১০০% খাঁটি তামার তার ও ফায়ার রিটার্ডেন্ট..." class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500"></textarea>
+          </div>
+          <div>
+            <label class="block text-slate-400 font-bold mb-1">Description (English)</label>
+            <textarea id="prod-modal-desc-en" rows="2" placeholder="100% pure electrolytic copper wire..." class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-orange-500"></textarea>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 font-bold mb-1">কারিগরী স্পেসিফিকেশন (JSON Format Key-Values)</label>
+          <textarea id="prod-modal-specs" rows="3" class="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-emerald-400 font-mono text-[11px] outline-none">{ "Core": "Single Core", "Size": "1.5 RM", "Warranty": "Official" }</textarea>
+        </div>
+
+        <!-- Toggles -->
+        <div class="flex items-center gap-6 pt-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="prod-modal-featured" class="w-4 h-4 rounded text-orange-600 focus:ring-0">
+            <span class="text-white font-bold">হোমপেজে ফিচার্ড হিসেবে দেখান</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="prod-modal-instock" checked class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
+            <span class="text-white font-bold">বর্তমানে স্টকে আছে</span>
+          </label>
+        </div>
+
+        <div class="pt-4 border-t border-slate-800 flex justify-end gap-2">
+          <button type="button" onclick="closeProductCrudModal()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs">
+            বাতিল
+          </button>
+          <button type="submit" class="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs shadow-md shadow-orange-600/30">
+            সংরক্ষণ করুন (Save)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. ORDER INVOICE MODAL (Printable) -->
+  <div id="order-invoice-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white text-slate-900 rounded-3xl max-w-xl w-full p-6 shadow-2xl relative text-xs">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4 print:hidden">
+        <h3 class="font-extrabold text-sm text-slate-900">অফিশিয়াল অর্ডার ইনভয়েস</h3>
+        <div class="flex items-center gap-2">
+          <button onclick="printOrderInvoice()" class="px-3.5 py-1.5 bg-slate-900 hover:bg-black text-white font-bold rounded-lg text-xs flex items-center gap-1.5">
+            <i class="fas fa-print"></i> প্রিন্ট ইনভয়েস
+          </button>
+          <button onclick="closeInvoiceModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Printable Invoice Area -->
+      <div id="printable-invoice-content" class="p-2 space-y-4">
+        <!-- Store Header -->
+        <div class="flex items-center justify-between pb-4 border-b-2 border-slate-900">
+          <div class="flex items-center gap-3">
+            <img src="images/fb/logo.jpg" class="w-12 h-12 rounded-xl object-cover border border-slate-300">
+            <div>
+              <h2 class="text-base font-black text-slate-900 leading-tight">সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার</h2>
+              <p class="text-[11px] text-slate-600">হামকো অথোরাইজড ডিলার ও আর আর কেবল পার্টনার</p>
+              <p class="text-[10px] text-slate-500">মিশন হাসপাতালের পূর্ব পার্শ্বে, ঢাকা রোড, বড় হরিশপুর, নাটোর</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-bold text-slate-500 uppercase block">Invoice / চালান</span>
+            <strong id="invoice-order-no" class="text-base font-black text-orange-600 block">SEH-000000</strong>
+            <span id="invoice-date" class="text-[10px] text-slate-500 block"></span>
+          </div>
+        </div>
+
+        <!-- Customer & Order Details -->
+        <div class="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px]">
+          <div>
+            <strong class="text-slate-400 block uppercase">বিল প্রাপক:</strong>
+            <p id="invoice-customer" class="font-bold text-slate-900 text-xs"></p>
+            <p id="invoice-phone" class="text-slate-700"></p>
+            <p id="invoice-address" class="text-slate-600"></p>
+          </div>
+          <div class="text-right">
+            <strong class="text-slate-400 block uppercase">পেমেন্ট & স্ট্যাটাস:</strong>
+            <p id="invoice-payment" class="font-bold text-slate-900"></p>
+            <p class="text-slate-600">স্ট্যাটাস: <span id="invoice-status" class="font-bold text-emerald-600"></span></p>
+            <p class="text-slate-500 text-[10px]">হটলাইন: 01780-904878</p>
+          </div>
+        </div>
+
+        <!-- Items Table -->
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-slate-100 border-b border-slate-300 text-[10px] uppercase text-slate-600 font-black">
+              <th class="py-2 px-3">#</th>
+              <th class="py-2 px-3">পণ্যের বিবরণ</th>
+              <th class="py-2 px-3 text-right">দর (৳)</th>
+              <th class="py-2 px-3 text-center">পরিমাণ</th>
+              <th class="py-2 px-3 text-right">মোট (৳)</th>
+            </tr>
+          </thead>
+          <tbody id="invoice-items-body">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+
+        <!-- Totals Summary -->
+        <div class="flex justify-end pt-2">
+          <div class="w-48 space-y-1 text-xs">
+            <div class="flex justify-between text-slate-600">
+              <span>উপমোট:</span>
+              <span id="invoice-subtotal">৳0</span>
+            </div>
+            <div class="flex justify-between text-slate-600">
+              <span>ডেলিভারি চার্জ:</span>
+              <span id="invoice-delivery">৳0</span>
+            </div>
+            <div class="flex justify-between text-sm font-black text-slate-900 pt-1 border-t border-slate-300">
+              <span>সর্বমোট বিল:</span>
+              <span id="invoice-total" class="text-orange-600 font-extrabold">৳0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-slate-200 text-center text-[10px] text-slate-500">
+          <p>সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার থেকে কেনাকাটা করার জন্য ধন্যবাদ।</p>
+          <p>পণ্য সংক্রান্ত যেকোনো তথ্যে কল করুন: 01780-904878, 01714-246866</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data & Admin Script -->
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
+

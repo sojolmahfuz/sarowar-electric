@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="bn" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার | Sarowar Electric & Hardware - Authorized Hamko Dealer & RR Kabel Partner, Natore</title>
+  <meta name="description" content="সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার - বড় হরিশপুর, ঢাকা রোড, নাটোর। আর আর কেবল ও হামকো অর্থরাইজড ডিলার। পাইকারি ও খুচরা ইলেকট্রিক্যাল ও হার্ডওয়্যার সামগ্রী।">
+  <meta name="keywords" content="Sarowar Electric, Sarowar Hardware, RR Kabel Natore, Hamko Dealer Natore, IPS Battery Natore, House Wiring Bangladesh, Electrical shop Natore">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="images/fb/logo.jpg">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            },
+            navy: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-bengali">
+
+  <!-- 1. TOP ANNOUNCEMENT & CONTACT BAR -->
+  <div class="bg-navy-950 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-4 flex-wrap">
+        <span class="flex items-center gap-1.5 text-orange-400 font-semibold">
+          <i class="fas fa-certificate text-xs"></i>
+          <span>হামকো অথোরাইজড ডিলার ও আর আর কেবল পার্টনার</span>
+        </span>
+        <span class="hidden md:inline-flex items-center gap-1.5 text-slate-400">
+          <i class="fas fa-map-marker-alt text-orange-500"></i>
+          <span>মিশন হাসপাতালের পূর্ব পার্শ্বে, ঢাকা রোড, বড় হরিশপুর, নাটোর</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <a href="tel:01780904878" class="hover:text-orange-400 transition font-bold flex items-center gap-1.5">
+          <i class="fas fa-phone-alt text-orange-500 text-xs"></i> 01780-904878
+        </a>
+        <a href="tel:01714246866" class="hidden sm:inline-flex hover:text-orange-400 transition font-bold items-center gap-1.5">
+          <i class="fas fa-phone-alt text-slate-500 text-xs"></i> 01714-246866
+        </a>
+        
+        <!-- Order Tracking Button -->
+        <button onclick="document.getElementById('track-modal').classList.remove('hidden')" class="hover:text-white transition flex items-center gap-1 text-slate-300 font-medium">
+          <i class="fas fa-truck text-xs text-orange-400"></i>
+          <span data-i18n="nav_track">ট্র্যাকিং</span>
+        </button>
+
+        <!-- Language Switcher -->
+        <button id="btn-lang-toggle" class="flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-orange-400 font-bold transition text-[11px] border border-slate-700">
+          <i class="fas fa-globe"></i>
+          <span id="lang-toggle-text">English</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. STICKY MAIN HEADER & NAVIGATION -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+      <div class="flex items-center justify-between gap-4">
+        
+        <!-- Logo & Store Branding -->
+        <a href="#" class="flex items-center gap-3 group">
+          <div class="relative w-12 h-12 rounded-xl overflow-hidden border border-orange-500/30 shadow-md flex-shrink-0 bg-white">
+            <img src="images/fb/logo.jpg" alt="Sarowar Electric" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-tight group-hover:text-orange-600 transition">
+                সারোয়ার ইলেকট্রিক
+              </span>
+              <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-extrabold uppercase rounded bg-red-600 text-white tracking-wider">
+                & হার্ডওয়্যার
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium hidden sm:block">
+              RR Kabel & Authorized Hamko Dealer | নাটোর
+            </p>
+          </div>
+        </a>
+
+        <!-- Live Search Bar -->
+        <div class="hidden lg:flex flex-1 max-w-md mx-4">
+          <div class="relative w-full">
+            <input type="text" id="main-search-input" placeholder="পণ্য খুঁজুন (যেমন: কেবল, ব্যাটারি, সুইচ, আইপিএস)..." class="w-full pl-10 pr-4 py-2 text-xs bg-slate-100 focus:bg-white border border-slate-200 focus:border-orange-500 rounded-xl outline-none transition font-medium">
+            <i class="fas fa-search absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+          </div>
+        </div>
+
+        <!-- Quick Action Nav Buttons -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="#estimator-section" class="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-orange-50 text-orange-700 hover:bg-orange-100 border border-orange-200 transition">
+            <i class="fas fa-calculator text-orange-600"></i>
+            <span data-i18n="nav_estimator">ওয়্যারিং এস্টিমেট</span>
+          </a>
+
+          <a href="#wholesale-section" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+            <i class="fas fa-file-invoice text-slate-600"></i>
+            <span data-i18n="nav_wholesale">হোলসেল কোটেশন</span>
+          </a>
+
+          <!-- Cart Trigger Button -->
+          <button onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white transition shadow-md shadow-orange-600/30 flex items-center gap-2">
+            <i class="fas fa-shopping-cart text-sm"></i>
+            <span class="text-xs font-extrabold hidden sm:inline">কার্ট</span>
+            <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white hidden">
+              0
+            </span>
+          </button>
+
+          <!-- Mobile Menu Toggle -->
+          <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden p-2.5 text-slate-600 hover:bg-slate-100 rounded-xl transition">
+            <i class="fas fa-bars text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Search Bar (small screens) -->
+      <div class="mt-2.5 lg:hidden">
+        <div class="relative w-full">
+          <input type="text" oninput="STATE.searchQuery = this.value; loadProducts();" placeholder="পণ্য খুঁজুন (কেবল, ব্যাটারি, সুইচ)..." class="w-full pl-9 pr-4 py-2 text-xs bg-slate-100 border border-slate-200 rounded-xl outline-none focus:bg-white focus:border-orange-500 font-medium">
+          <i class="fas fa-search absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Desktop Sub-Navigation Menu -->
+      <nav class="hidden lg:flex items-center gap-6 mt-3 pt-2.5 border-t border-slate-100 text-xs font-semibold text-slate-600">
+        <a href="#hero-section" class="hover:text-orange-600 transition flex items-center gap-1.5">
+          <i class="fas fa-home text-orange-500"></i> <span data-i18n="nav_home">হোম</span>
+        </a>
+        <a href="#products-section" class="hover:text-orange-600 transition flex items-center gap-1.5">
+          <i class="fas fa-box text-slate-400"></i> <span data-i18n="nav_products">পণ্যসমূহ</span>
+        </a>
+        <a href="#hamko-section" class="hover:text-orange-600 transition flex items-center gap-1.5 text-blue-700 font-bold">
+          <i class="fas fa-car-battery text-blue-600"></i> <span data-i18n="nav_hamko">হামকো আইপিএস ও ব্যাটারি</span>
+        </a>
+        <a href="#estimator-section" class="hover:text-orange-600 transition flex items-center gap-1.5">
+          <i class="fas fa-calculator text-slate-400"></i> <span data-i18n="nav_estimator">ওয়্যারিং ক্যালকুলেটর</span>
+        </a>
+        <a href="#wholesale-section" class="hover:text-orange-600 transition flex items-center gap-1.5">
+          <i class="fas fa-boxes text-slate-400"></i> <span data-i18n="nav_wholesale">হোলসেল / ঠিকাদার</span>
+        </a>
+        <a href="#services-section" class="hover:text-orange-600 transition flex items-center gap-1.5">
+          <i class="fas fa-user-cog text-slate-400"></i> <span data-i18n="nav_services">ইলেকট্রিশিয়ান সার্ভিস</span>
+        </a>
+        <a href="#about-section" class="hover:text-orange-600 transition flex items-center gap-1.5">
+          <i class="fas fa-store text-slate-400"></i> <span data-i18n="nav_about">দোকান পরিচিতি</span>
+        </a>
+        <a href="#reviews-section" class="hover:text-orange-600 transition flex items-center gap-1.5">
+          <i class="fas fa-star text-amber-500"></i> <span data-i18n="nav_reviews">গ্রাহক রিভিউ</span>
+        </a>
+        <a href="admin.html" target="_blank" class="ml-auto px-3 py-1 rounded-lg bg-slate-900 text-orange-400 hover:text-white hover:bg-slate-800 transition flex items-center gap-1 font-bold border border-slate-700">
+          <i class="fas fa-lock text-[10px]"></i> <span>এডমিন ড্যাশবোর্ড</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-2 text-xs font-semibold">
+      <a href="#hero-section" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block py-1.5 hover:text-orange-600">হোম</a>
+      <a href="#products-section" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block py-1.5 hover:text-orange-600">পণ্য ক্যাটালগ</a>
+      <a href="#hamko-section" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block py-1.5 text-blue-700 font-bold">হামকো আইপিএস ও ব্যাটারি জোন</a>
+      <a href="#estimator-section" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block py-1.5 text-orange-600">বিল্ডিং ওয়্যারিং এস্টিমেটর</a>
+      <a href="#wholesale-section" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block py-1.5 hover:text-orange-600">হোলসেল ও ঠিকাদার কোটেশন</a>
+      <a href="#services-section" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block py-1.5 hover:text-orange-600">ইলেকট্রিশিয়ান বুকিং (নাটোর)</a>
+      <a href="#about-section" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block py-1.5 hover:text-orange-600">শোরুম লোকেশন ও সময়সূচি</a>
+      <a href="#reviews-section" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block py-1.5 hover:text-orange-600">কাস্টমার মতামত</a>
+      <a href="admin.html" class="block py-1.5 text-orange-600 font-bold"><i class="fas fa-lock mr-1"></i> এডমিন ড্যাশবোর্ড</a>
+    </div>
+  </header>
+
+  <!-- 3. HERO SHOWCASE SECTION -->
+  <section id="hero-section" class="relative overflow-hidden bg-gradient-to-br from-navy-950 via-slate-900 to-navy-900 text-white py-12 md:py-20">
+    <!-- Subtle electrical grid overlay -->
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#f97316_1px,transparent_1px)] [background-size:24px_24px]"></div>
+
+    <div class="max-w-7xl mx-auto px-4 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Left Hero Content -->
+        <div class="lg:col-span-7 space-y-5">
+          <!-- Authorized Badges -->
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-600/30 border border-blue-400/40 text-blue-300 backdrop-blur">
+              <i class="fas fa-award text-blue-400"></i> হামকো অথোরাইজড ডিলার
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-600/30 border border-red-400/40 text-red-300 backdrop-blur">
+              <i class="fas fa-check-shield text-red-400"></i> RR KĀBEL পার্টনার
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-600/30 border border-emerald-400/40 text-emerald-300 backdrop-blur">
+              <i class="fas fa-certificate text-emerald-400"></i> ১০০% জেনুইন মালামাল
+            </span>
+          </div>
+
+          <!-- Main Heading -->
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+            নাটোরের বিশ্বস্ত <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500">ইলেকট্রিক্যাল & হার্ডওয়্যার</span> সমাধান
+          </h1>
+
+          <p class="text-sm sm:text-base text-slate-300 font-medium leading-relaxed max-w-2xl">
+            আর আর কেবল (RR Kabel) ফায়ার রিটার্ডেন্ট খাঁটি তামার তার, হামকো (HAMKO) ডিপ সাইকেল আইপিএস ও সোলার ব্যাটারি, আধুনিক এলইডি লাইটিং, গ্যাং সুইচ এবং পিভিসি হার্ডওয়্যার পণ্যের পাইকারি ও খুচরা বিক্রয় কেন্দ্র।
+          </p>
+
+          <!-- Store Location Landmark Box -->
+          <div class="p-3.5 bg-slate-800/80 rounded-2xl border border-slate-700/80 backdrop-blur max-w-xl text-xs flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-orange-600/20 text-orange-400 flex items-center justify-center text-lg flex-shrink-0">
+              <i class="fas fa-store"></i>
+            </div>
+            <div>
+              <strong class="text-white block font-bold">শোরুমের মূল ঠিকানা:</strong>
+              <span class="text-slate-300">মিশন হাসপাতালের পূর্ব পার্শ্বে, ঢাকা রোড, বড় হরিশপুর, নাটোর।</span>
+            </div>
+          </div>
+
+          <!-- CTAs -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <a href="https://wa.me/8801780904878?text=%E0%A6%86%E0%A6%B8%E0%A6%B8%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%81%20%E0%A6%86%E0%A6%B2%E0%A6%BE%E0%A6%87%E0%A6%95%E0%A7%81%E0%A6%AE%E0%A5%A4%20%E0%A6%B8%E0%A6%BE%E0%A6%B0%E0%A7%8B%E0%A6%AF%E0%A6%BC%E0%A6%BE%E0%A6%B0%20%E0%A6%87%E0%A6%B2%E0%A7%87%E0%A6%95%E0%A7%8D%E0%A6%9F%E0%A7%8D%E0%A6%B0%E0%A6%BF%E0%A6%95%E0%A6%B8%E0%A7%87%20%E0%A6%AE%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A6%BE%E0%A6%B2%20%E0%A6%B8%E0%A6%AE%E0%A7%8D%E0%A6%AA%E0%A6%B0%E0%A7%8D%E0%A6%95%E0%A7%87%20%E0%A6%9C%E0%A6%BE%E0%A6%A8%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A5%A4" target="_blank" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition transform hover:-translate-y-0.5">
+              <i class="fab fa-whatsapp text-lg"></i>
+              <span>হোয়াটসঅ্যাপে যোগাযোগ</span>
+            </a>
+
+            <a href="#products-section" class="px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-orange-600/30 transition transform hover:-translate-y-0.5">
+              <i class="fas fa-boxes"></i>
+              <span>সকল মালামাল দেখুন</span>
+            </a>
+
+            <a href="tel:01780904878" class="px-5 py-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 font-bold text-xs sm:text-sm flex items-center gap-2 border border-slate-700 transition">
+              <i class="fas fa-phone-alt text-orange-400"></i>
+              <span>01780-904878</span>
+            </a>
+          </div>
+
+          <!-- Trust statistics -->
+          <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800/80 text-center sm:text-left">
+            <div>
+              <strong class="text-xl sm:text-2xl font-black text-orange-400 block">১০০%</strong>
+              <span class="text-slate-400 text-[11px] font-medium">আসল কপার তার</span>
+            </div>
+            <div>
+              <strong class="text-xl sm:text-2xl font-black text-blue-400 block">৩০ মাস</strong>
+              <span class="text-slate-400 text-[11px] font-medium">হামকো অফিসিয়াল গ্যারান্টি</span>
+            </div>
+            <div>
+              <strong class="text-xl sm:text-2xl font-black text-emerald-400 block">হোলসেল</strong>
+              <span class="text-slate-400 text-[11px] font-medium">ঠিকাদার বিশেষ ছাড়</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Visual Grid (Authentic Storefront Photography) -->
+        <div class="lg:col-span-5 relative">
+          <!-- Decorative glow -->
+          <div class="absolute -inset-1 bg-gradient-to-r from-orange-600 to-red-600 rounded-3xl blur-xl opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+
+          <div class="relative bg-slate-900 border border-slate-800 rounded-3xl p-3 shadow-2xl overflow-hidden">
+            <!-- Actual Store Signboard Photo -->
+            <div class="relative rounded-2xl overflow-hidden aspect-[4/3] group">
+              <img src="images/fb/logo.jpg" alt="Sarowar Electric Storefront Natore" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+              
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent flex flex-col justify-end p-4">
+                <span class="px-3 py-1 rounded-lg bg-orange-600/90 text-white text-xs font-bold w-fit mb-1 backdrop-blur shadow-sm">
+                  <i class="fas fa-store-alt mr-1"></i> সরাসরি নাটোর শোরুম
+                </span>
+                <h4 class="text-white font-extrabold text-sm sm:text-base leading-snug">
+                  সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার
+                </h4>
+                <p class="text-[11px] text-slate-300">
+                  মিশন হাসপাতালের পূর্ব পার্শ্বে, ঢাকা রোড, বড় হরিশপুর, নাটোর
+                </p>
+              </div>
+            </div>
+
+            <!-- Mini Showcase Highlights -->
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <div class="relative rounded-xl overflow-hidden h-24 group">
+                <img src="images/fb/cover.jpg" alt="Lighting Showroom" class="w-full h-full object-cover transition group-hover:scale-110">
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center p-2 text-center">
+                  <span class="text-[11px] font-bold text-white leading-tight">আধুনিক লাক্সারি লাইটিং ও ফিক্সচার</span>
+                </div>
+              </div>
+
+              <div class="relative rounded-xl overflow-hidden h-24 group">
+                <img src="images/fb/product8.jpg" alt="RR Kabel Store" class="w-full h-full object-cover transition group-hover:scale-110">
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center p-2 text-center">
+                  <span class="text-[11px] font-bold text-white leading-tight">আর আর কেবল সরাসরি স্টক</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. TRUST FEATURES STRIP -->
+  <section class="bg-white border-y border-slate-200 py-6 px-4">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+        <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-lg flex-shrink-0">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div>
+          <strong class="text-slate-900 block font-bold text-xs">১০০% আসল পণ্যের নিশ্চয়তা</strong>
+          <span class="text-slate-500 text-[11px]">কোনো প্রকার নকল মালামাল নেই</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg flex-shrink-0">
+          <i class="fas fa-handshake"></i>
+        </div>
+        <div>
+          <strong class="text-slate-900 block font-bold text-xs">হামকো অথোরাইজড ডিলার</strong>
+          <span class="text-slate-500 text-[11px]">কোম্পানির অফিসিয়াল ওয়ারেন্টি সেবা</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg flex-shrink-0">
+          <i class="fas fa-truck-fast"></i>
+        </div>
+        <div>
+          <strong class="text-slate-900 block font-bold text-xs">নাটোর সদরে দ্রুত ডেলিভারি</strong>
+          <span class="text-slate-500 text-[11px]">সরাসরি বাড়ি বা সাইটে পৌঁছানোর ব্যবস্থা</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100">
+        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-lg flex-shrink-0">
+          <i class="fas fa-tags"></i>
+        </div>
+        <div>
+          <strong class="text-slate-900 block font-bold text-xs">ঠিকাদার ও হোলসেল রেট</strong>
+          <span class="text-slate-500 text-[11px]">বাল্ক অর্ডারে আকর্ষণীয় ছাড়</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. MAIN PRODUCTS CATALOG & FILTERS -->
+  <section id="products-section" class="py-12 px-4 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <span class="text-orange-600 font-bold text-xs uppercase tracking-wider block mb-1">
+          <i class="fas fa-layer-group mr-1"></i> সরাসরি স্টক ক্যাটালগ
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+          আমাদের নিয়মিত পণ্য সম্ভার
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+          অনলাইন থেকে অর্ডার করুন বা সরাসরি বড় হরিশপুর শোরুমে এসে সংগ্রহ করুন।
+        </p>
+      </div>
+
+      <!-- Sorting & Filter Controls -->
+      <div class="flex items-center gap-2 self-start md:self-auto">
+        <label class="text-xs text-slate-500 font-medium">সর্ট করুন:</label>
+        <select id="products-sort-select" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 outline-none focus:border-orange-500 shadow-sm">
+          <option value="featured">ফিচার্ড ও জনপ্রিয়</option>
+          <option value="price_asc">মূল্য: কম থেকে বেশি</option>
+          <option value="price_desc">মূল্য: বেশি থেকে কম</option>
+          <option value="rating">সর্বোচ্চ রেটিং</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Category Pills Bar -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar" id="categories-container">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Products Grid -->
+    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <!-- Injected by JavaScript -->
+    </div>
+  </section>
+
+  <!-- 6. HAMKO AUTHORIZED IPS & SOLAR POWER HUB -->
+  <section id="hamko-section" class="py-14 bg-gradient-to-br from-slate-900 to-blue-950 text-white px-4 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-6 space-y-4">
+          <span class="px-3 py-1 rounded-full text-xs font-extrabold bg-blue-600 text-white tracking-wide uppercase inline-flex items-center gap-1.5 shadow-md shadow-blue-600/30">
+            <i class="fas fa-award"></i> HAMKO AUTHORIZED DEALER
+          </span>
+
+          <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight">
+            হামকো ডিপ সাইকেল আইপিএস ও সোলার ব্যাটারি সেন্টার
+          </h2>
+
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            সারোয়ার ইলেকট্রিক নাটোরের অনুমোদিত হামকো ডিলার। আমরা দিচ্ছি ১০০% অরিজিনাল ডিপ সাইকেল টিউবুলার ব্যাটারি, ডিএসপি পিওর সাইন ওয়েভ আইপিএস ইনভার্টার এবং সোলার হাইব্রিড পাওয়ার সিস্টেম—কোম্পানির ৩০ মাসের অফিসিয়াল রিপ্লেসমেন্ট ওয়ারেন্টি সহ।
+          </p>
+
+          <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2.5">
+              <i class="fas fa-check-circle text-emerald-400 mt-0.5"></i>
+              <span><strong>৩০ মাসের অফিসিয়াল গ্যারান্টি:</strong> যেকোনো ফ্যাক্টরি ত্রুটিতে নতুন ব্যাটারি প্রতিস্থাপনের সুবিধা।</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <i class="fas fa-check-circle text-emerald-400 mt-0.5"></i>
+              <span><strong>হেভি ডিউটি টিউবুলার প্লেট:</strong> গভীর লোডশেডিংয়ে দীর্ঘ ব্যাকআপ এবং উচ্চ সহনশীলতা।</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <i class="fas fa-check-circle text-emerald-400 mt-0.5"></i>
+              <span><strong>ফ্রি টেকনিক্যাল কনসালটেশন:</strong> আপনার বাড়ির ফ্যান-লাইটের লোড অনুযায়ী সঠিক কেভিএ ও অ্যাম্পিয়ার নির্ধারণ।</span>
+            </div>
+          </div>
+
+          <div class="pt-3 flex flex-wrap gap-3">
+            <a href="https://wa.me/8801780904878?text=%E0%A6%86%E0%A6%AE%E0%A6%BF%20%E0%A6%B9%E0%A6%BE%E0%A6%AE%E0%A6%95%E0%A7%8B%20%E0%A6%86%E0%A6%87%E0%A6%AA%E0%A6%BF%E0%A6%8F%E0%A6%B8%20%E0%A6%93%20%E0%A6%AC%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%9F%E0%A6%BE%E0%A6%B0%E0%A6%BF%20%E0%A6%A8%E0%A6%BF%E0%A6%A4%E0%A7%87%20%E0%A6%86%E0%A6%97%E0%A7%8D%E0%A6%B0%E0%A6%B9%E0%A7%80%E0%A5%A4%20%E0%A6%AA%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%95%E0%A7%87%E0%A6%9C%20%E0%A6%AE%E0%A7%82%E0%A6%B2%E0%A7%8D%E0%A6%AF%20%E0%A6%9C%E0%A6%BE%E0%A6%A8%E0%A6%BE%E0%A6%AC%E0%A7%87%E0%A6%A8%E0%A5%A4" target="_blank" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition">
+              <i class="fab fa-whatsapp text-base"></i>
+              <span>আইপিএস প্যাকেজ জানতে WhatsApp করুন</span>
+            </a>
+
+            <button onclick="document.getElementById('estimator-section').scrollIntoView({behavior: 'smooth'})" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center gap-2 border border-slate-700 transition">
+              <i class="fas fa-calculator text-blue-400"></i>
+              <span>আইপিএস লোড ক্যালকুলেট করুন</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side: Product Card Showcase -->
+        <div class="lg:col-span-6 bg-slate-800/80 rounded-3xl p-6 border border-slate-700 backdrop-blur shadow-2xl">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-700">
+            <div>
+              <span class="text-xs text-blue-400 font-bold uppercase">জনপ্রিয় প্যাকেজ</span>
+              <h4 class="text-lg font-bold text-white">হামকো কম্বো সুপ্রিম ১০০০ ভিএ + ১৬৫ অ্যাম্পিয়ার</h4>
+            </div>
+            <span class="px-3 py-1 bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 rounded-full text-xs font-bold">
+              সম্পূর্ণ রেডি সেটআপ
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4">
+            <div class="rounded-xl overflow-hidden bg-slate-900 p-2 flex items-center justify-center">
+              <img src="images/fb/product6.jpg" alt="Hamko Battery" class="max-h-48 object-contain rounded-lg">
+            </div>
+            <div class="flex flex-col justify-between text-xs space-y-2">
+              <div class="space-y-1 text-slate-300">
+                <p>• <strong>লোড ক্ষমতা:</strong> ৫টি ফ্যান, ৮টি এলইডি লাইট, টিভি ও ওয়াইফাই</p>
+                <p>• <strong>ব্যাকআপ সময়:</strong> ৩.৫ থেকে ৪+ ঘন্টা</p>
+                <p>• <strong>ইনভার্টার টাইপ:</strong> ডিএসপি পিওর সাইন ওয়েভ</p>
+                <p>• <strong>ওয়ারেন্টি:</strong> ব্যাটারি ৩০ মাস, ইনভার্টার ২৪ মাস</p>
+              </div>
+              <div class="pt-2 border-t border-slate-700">
+                <span class="text-xs text-slate-400 block">প্যাকেজ আনুমানিক মূল্য:</span>
+                <span class="text-2xl font-black text-amber-400">৳৩৮,০০০</span>
+                <span class="text-[11px] text-slate-400 block mt-0.5">*লোকেশন ও তারের দূরত্ব অনুযায়ী প্রযোজ্য</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. INTERACTIVE WIRING & IPS ESTIMATOR -->
+  <section id="estimator-section" class="py-14 px-4 bg-slate-100 border-b border-slate-200">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="text-orange-600 font-bold text-xs uppercase tracking-wider block mb-1">
+          <i class="fas fa-magic mr-1"></i> অনলাইন ম্যাটেরিয়াল ক্যালকুলেটর
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+          বিল্ডিং ওয়্যারিং ও আইপিএস বাজেট এস্টিমেটর
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 font-medium mt-1.5">
+          আপনার ফ্ল্যাট বা দোকানের সাইজ নির্ধারণ করে আনুমানিক মালামালের তালিকা ও খরচের ধারণা এক ক্লিকে বের করুন।
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Calculator 1: House Wiring Estimator -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100 mb-4">
+              <div class="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-base">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">বাড়ি বা দোকানের ওয়্যারিং এস্টিমেট</h3>
+                <span class="text-xs text-slate-400">ক্যাবল, সুইচবোর্ড ও পিভিসি পাইপের হিসাব</span>
+              </div>
+            </div>
+
+            <div class="space-y-4 text-xs font-medium">
+              <div>
+                <label class="block text-slate-700 font-bold mb-1">বিল্ডিংয়ের সাইজ / ধরন নির্বাচন করুন:</label>
+                <select id="calc-building-size" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white outline-none focus:border-orange-500 font-semibold text-slate-800">
+                  <option value="1bhk">১ বেডরুমের ইউনিট (১ BHK / ছোট দোকান)</option>
+                  <option value="2bhk" selected>২ বেডরুমের ফ্ল্যাট (২ BHK / সাধারণ বাসা)</option>
+                  <option value="3bhk">৩ বেডরুমের ফ্ল্যাট (৩ BHK / বড় ফ্ল্যাট)</option>
+                  <option value="duplex">ডুপ্লেক্স বাড়ি / ৩ তলা বিশিষ্ট বিল্ডিং</option>
+                  <option value="shop">বাণিজ্যিক দোকান / শোরুম</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-slate-700 font-bold mb-1">তারের মান / ব্র্যান্ড নির্বাচন:</label>
+                <select id="calc-wire-grade" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white outline-none focus:border-orange-500 font-semibold text-slate-800">
+                  <option value="rrkabel" selected>RR Kabel (সুপারএক্স ফায়ার রিটার্ডেন্ট খাঁটি কপার - সেরা)</option>
+                  <option value="standard">Standard Certified Copper (সাধারণ কপার)</option>
+                </select>
+              </div>
+
+              <button id="btn-calc-wiring" class="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-600/20 transition">
+                <i class="fas fa-calculator"></i> আনুমানিক মালামালের তালিকা তৈরি করুন
+              </button>
+            </div>
+          </div>
+
+          <div id="wiring-calc-result" class="mt-4">
+            <!-- Dynamic Result -->
+          </div>
+        </div>
+
+        <!-- Calculator 2: IPS Capacity Calculator -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100 mb-4">
+              <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-base">
+                <i class="fas fa-car-battery"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">হামকো আইপিএস ক্যাপাসিটি ক্যালকুলেটর</h3>
+                <span class="text-xs text-slate-400">আপনার লোড অনুযায়ী সঠিক ব্যাটারি নির্ধারণ</span>
+              </div>
+            </div>
+
+            <div class="space-y-3 text-xs font-medium">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-slate-700 font-bold mb-1">সিলিং ফ্যান সংখ্যা:</label>
+                  <input type="number" id="ips-fans" value="3" min="0" max="15" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 font-bold outline-none focus:border-blue-500">
+                </div>
+                <div>
+                  <label class="block text-slate-700 font-bold mb-1">এলইডি লাইট সংখ্যা:</label>
+                  <input type="number" id="ips-lights" value="5" min="0" max="30" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 font-bold outline-none focus:border-blue-500">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-slate-700 font-bold mb-1">টেলিভিশন (TV):</label>
+                  <select id="ips-tv" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 font-bold outline-none focus:border-blue-500">
+                    <option value="1" selected>১টি টিভি চলবে</option>
+                    <option value="0">টিভি চলবে না</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-slate-700 font-bold mb-1">কম্পিউটার / রাউটার:</label>
+                  <select id="ips-pc" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 font-bold outline-none focus:border-blue-500">
+                    <option value="0" selected>না</option>
+                    <option value="1">১টি কম্পিউটার চলবে</option>
+                  </select>
+                </div>
+              </div>
+
+              <button id="btn-calc-ips" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-600/20 transition">
+                <i class="fas fa-battery-half"></i> সঠিক আইপিএস ও ব্যাটারি দেখুন
+              </button>
+            </div>
+          </div>
+
+          <div id="ips-calc-result" class="mt-4">
+            <!-- Dynamic Result -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. WHOLESALE & BULK CONTRACTOR QUOTATION SECTION -->
+  <section id="wholesale-section" class="py-14 px-4 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <div class="lg:col-span-5 space-y-4">
+        <span class="text-orange-600 font-bold text-xs uppercase tracking-wider block">
+          <i class="fas fa-briefcase mr-1"></i> ঠিকাদার ও প্রজেক্ট পার্টনারশিপ
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+          বিল্ডিং কনস্ট্রাকশন ও বড় কাজের হোলসেল কোটেশন
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+          আপনি কি একজন ইলেকট্রিক্যাল ঠিকাদার, রাজমিস্ত্রি, বিল্ডার বা কারখানা মালিক? সারোয়ার ইলেকট্রিক থেকে পাইকারি দরে আর আর কেবল, সুপার স্টার সুইচ, গ্যাংবক্স এবং হামকো ব্যাটারির বিশেষ ছাড়যুক্ত অফিশিয়াল কোটেশন পেতে নিচের ফর্মটি পূরণ করুন।
+        </p>
+
+        <div class="space-y-3 text-xs text-slate-700 pt-2">
+          <div class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-slate-200">
+            <i class="fas fa-percentage text-orange-600 text-base"></i>
+            <span><strong>স্পেশাল ডিলার রেট:</strong> সাধারণ খুচরা মূল্যের চেয়ে আকর্ষণীয় ছাড়</span>
+          </div>
+          <div class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-slate-200">
+            <i class="fas fa-file-invoice-dollar text-emerald-600 text-base"></i>
+            <span><strong>অফিশিয়াল ভাউচার:</strong> প্রজেক্ট হিসাবের পাকা বিল ও চালান</span>
+          </div>
+          <div class="flex items-center gap-2.5 p-2.5 bg-white rounded-xl border border-slate-200">
+            <i class="fas fa-truck-loading text-blue-600 text-base"></i>
+            <span><strong>সাইট ডেলিভারি:</strong> নাটোরের যেকোনো উপজেলায় সরাসরি মালামাল সরবরাহ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wholesale Form -->
+      <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-xl">
+        <h3 class="text-lg font-black text-slate-900 mb-1">হোলসেল কোটেশন ফর্ম</h3>
+        <p class="text-xs text-slate-400 mb-4">তথ্য দিন, আমাদের টিম অতি দ্রুত আপনার সাথে যোগাযোগ করবে।</p>
+
+        <form id="wholesale-quote-form" class="space-y-3.5 text-xs font-medium">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-700 font-bold mb-1">আপনার নাম / প্রতিষ্ঠানের নাম *</label>
+              <input type="text" id="quote-name" required placeholder="মোঃ খায়রুল ইসলাম" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white outline-none focus:border-orange-500">
+            </div>
+            <div>
+              <label class="block text-slate-700 font-bold mb-1">মোবাইল নম্বর *</label>
+              <input type="tel" id="quote-phone" required placeholder="017XXXXXXXX" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white outline-none focus:border-orange-500">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-700 font-bold mb-1">আপনি কি ধরনের গ্রাহক?</label>
+              <select id="quote-client-type" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white outline-none focus:border-orange-500 font-semibold">
+                <option value="Electric Contractor">ইলেকট্রিক্যাল ঠিকাদার (Contractor)</option>
+                <option value="Electrician">ইলেকট্রিশিয়ান / টেকনিশিয়ান</option>
+                <option value="Building Owner">নতুন বাড়ি বানাচ্ছেন (Home Owner)</option>
+                <option value="Builder / Developer">বিল্ডিং ডেভেলপার / ইঞ্জিনিয়ার</option>
+                <option value="Retailer / Reseller">খুচরা বিক্রেতা / দোকানদার</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-700 font-bold mb-1">কাজের লোকেশন (উপজেলা / এলাকা)</label>
+              <input type="text" id="quote-location" placeholder="যেমন: বড় হরিশপুর, নাটোর সদর" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white outline-none focus:border-orange-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-slate-700 font-bold mb-1">প্রয়োজনীয় মালামালের সংক্ষিপ্ত বিবরণ বা তালিকা *</label>
+            <textarea id="quote-materials" rows="3" required placeholder="যেমন: RR Kabel ১.৫ আরএম ৫ কয়েল, ২.৫ আরএম ৩ কয়েল, সুপার স্টার ৮ গ্যাং সুইচ ৫ সেট, ১৬৫ Ah হামকো ব্যাটারি ১টি..." class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white outline-none focus:border-orange-500"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-700 font-bold mb-1">আনুমানিক বাজেট (ঐচ্ছিক)</label>
+              <input type="text" id="quote-budget" placeholder="যেমন: ৫০,০০০ - ১,০০,০০০ টাকা" class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white outline-none focus:border-orange-500">
+            </div>
+            <div class="flex items-end">
+              <button type="submit" class="w-full py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-600/20 transition">
+                <i class="fas fa-paper-plane"></i> কোটেশন সাবমিট করুন
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 9. CERTIFIED ELECTRICIAN SERVICE IN NATORE -->
+  <section id="services-section" class="py-14 bg-slate-900 text-white px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-5 space-y-4">
+          <span class="text-orange-400 font-bold text-xs uppercase tracking-wider block">
+            <i class="fas fa-tools mr-1"></i> অন-ডিমান্ড টেকনিশিয়ান সেবা
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight">
+            নাটোরে দক্ষ ইলেকট্রিশিয়ান ও ওয়্যারিং কারিগর প্রয়োজন?
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+            সারোয়ার ইলেকট্রিক থেকে অভিজ্ঞ ও বিশ্বস্ত ইলেকট্রিশিয়ান বুক করুন। বাড়ি বা ফ্ল্যাটের নতুন ওয়্যারিং, শর্ট সার্কিট ফল্ট মেরামত, হামকো আইপিএস ব্যাটারি ইনস্টলেশন এবং আধুনিক লাইটিং সেটআপ নিখুঁতভাবে সম্পন্ন করা হয়।
+          </p>
+
+          <div class="grid grid-cols-2 gap-3 text-xs pt-2">
+            <div class="p-3 bg-slate-800 rounded-xl border border-slate-700">
+              <strong class="text-orange-400 block mb-1">বাসাবাড়ির ওয়্যারিং</strong>
+              <span class="text-slate-400 text-[11px]">নিরাপদ ও নিখুঁত কনসিল্ড পাইপিং ও ওয়্যারিং</span>
+            </div>
+            <div class="p-3 bg-slate-800 rounded-xl border border-slate-700">
+              <strong class="text-blue-400 block mb-1">আইপিএস ইনস্টল</strong>
+              <span class="text-slate-400 text-[11px]">ইনভার্টার ও ব্যাটারির নিরাপদ সেটআপ</span>
+            </div>
+            <div class="p-3 bg-slate-800 rounded-xl border border-slate-700">
+              <strong class="text-red-400 block mb-1">শর্ট সার্কিট ফিক্স</strong>
+              <span class="text-slate-400 text-[11px]">ব্রেকার ট্রিপ ও জরুরি লাইন মেরামত</span>
+            </div>
+            <div class="p-3 bg-slate-800 rounded-xl border border-slate-700">
+              <strong class="text-emerald-400 block mb-1">ফলস সিলিং লাইট</strong>
+              <span class="text-slate-400 text-[11px]">প্যানেল, স্পটলাইট ও ঝাড়বাতি ফিটিং</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="lg:col-span-7 bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-700 shadow-xl">
+          <h3 class="text-base font-bold text-white mb-1">নাটোরে ইলেকট্রিশিয়ান বুকিং ফর্ম</h3>
+          <p class="text-xs text-slate-400 mb-4">ফরমটি পূরণ করুন, আমাদের টেকনিশিয়ান যোগাযোগ করবেন।</p>
+
+          <form id="service-booking-form" class="space-y-3 text-xs font-medium">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-slate-300 font-bold mb-1">আপনার নাম *</label>
+                <input type="text" id="srv-name" required placeholder="মোঃ ফারুক হোসেন" class="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white outline-none focus:border-orange-500">
+              </div>
+              <div>
+                <label class="block text-slate-300 font-bold mb-1">মোবাইল নম্বর *</label>
+                <input type="tel" id="srv-phone" required placeholder="017XXXXXXXX" class="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white outline-none focus:border-orange-500">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-slate-300 font-bold mb-1">কাজের ধরন *</label>
+                <select id="srv-type" class="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white outline-none focus:border-orange-500 font-semibold">
+                  <option value="House Wiring">নতুন বাড়ি বা ফ্ল্যাট সম্পূর্ণ ওয়্যারিং</option>
+                  <option value="IPS Setup">আইপিএস ও ব্যাটারি নতুন ইনস্টলেশন</option>
+                  <option value="Emergency Repair">জরুরি শর্ট সার্কিট ও ব্রেকার ট্রিপিং মেরামত</option>
+                  <option value="Lighting Fitting">সিলিং প্যানেল ও স্পটলাইট ফিটিং</option>
+                  <option value="Fan / Geyser Setup">সিলিং ফ্যান / ওয়াটার হিটার গিজার কানেকশন</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-slate-300 font-bold mb-1">কাজের সম্ভাব্য তারিখ</label>
+                <input type="text" id="srv-date" placeholder="যেমন: আগামী রবিবার বা দ্রুততম সময়ে" class="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white outline-none focus:border-orange-500">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-slate-300 font-bold mb-1">আপনার সঠিক ঠিকানা (নাটোর সদর / সংশ্লিষ্ট উপজেলা) *</label>
+              <input type="text" id="srv-address" required placeholder="যেমন: বড় হরিশপুর রেলগেটের কাছে, নাটোর" class="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white outline-none focus:border-orange-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-300 font-bold mb-1">কাজের সংক্ষিপ্ত বিবরণ (যদি থাকে)</label>
+              <textarea id="srv-details" rows="2" placeholder="সমস্যার বিবরণ বা কয়টি পয়েন্টের কাজ..." class="w-full p-2.5 rounded-xl border border-slate-700 bg-slate-900 text-white outline-none focus:border-orange-500"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-600/30 transition">
+              <i class="fas fa-check-circle"></i> বুকিং নিশ্চিত করুন
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. REVIEWS & CUSTOMER FEEDBACK -->
+  <section id="reviews-section" class="py-14 px-4 max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+      <div>
+        <span class="text-orange-600 font-bold text-xs uppercase tracking-wider block mb-1">
+          <i class="fas fa-comments mr-1"></i> সম্মানিত গ্রাহকদের অভিজ্ঞতা
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+          কেন নাটোরের মানুষ সারোয়ার ইলেকট্রিক পছন্দ করেন
+        </h2>
+      </div>
+
+      <button onclick="document.getElementById('review-form-wrapper').classList.toggle('hidden')" class="px-4 py-2 rounded-xl bg-orange-600 text-white text-xs font-bold hover:bg-orange-700 transition">
+        <i class="fas fa-pen mr-1"></i> মতামত বা রিভিউ দিন
+      </button>
+    </div>
+
+    <!-- Review Submission Drawer -->
+    <div id="review-form-wrapper" class="hidden mb-8 p-6 bg-white rounded-3xl border border-slate-200 shadow-md">
+      <h4 class="font-bold text-sm text-slate-800 mb-2">আপনার মূল্যবান মতামত দিন</h4>
+      <form id="review-form" class="space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input type="text" id="rev-name" required placeholder="আপনার নাম" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+          <input type="text" id="rev-loc" placeholder="আপনার এলাকা (যেমন: নাটোর)" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50">
+          <select id="rev-rating" class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold">
+            <option value="5">⭐⭐⭐⭐⭐ (৫ স্টার)</option>
+            <option value="4">⭐⭐⭐⭐ (৪ স্টার)</option>
+            <option value="3">⭐⭐⭐ (৩ স্টার)</option>
+          </select>
+        </div>
+        <textarea id="rev-comment" required rows="2" placeholder="সারোয়ার ইলেকট্রিকের পণ্য ও সেবা কেমন লেগেছে..." class="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50"></textarea>
+        <button type="submit" class="px-5 py-2 bg-slate-900 text-white rounded-xl font-bold">রিভিউ পোস্ট করুন</button>
+      </form>
+    </div>
+
+    <!-- Dynamic Reviews Grid -->
+    <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Injected by JavaScript -->
+    </div>
+  </section>
+
+  <!-- 11. ABOUT STORE & LOCATION MAP -->
+  <section id="about-section" class="py-14 bg-slate-100 border-t border-slate-200 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-6 space-y-4">
+          <span class="text-orange-600 font-bold text-xs uppercase tracking-wider block">
+            <i class="fas fa-store mr-1"></i> সরাসরি শোরুম ভিজিট
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+            সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার শোরুম
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+            নাটোর শহরের প্রাণকেন্দ্রে বড় হরিশপুর ঢাকা রোডে মিশন হাসপাতালের পূর্ব পার্শ্বে অবস্থিত আমাদের আউটলেট। এখানে আর আর কেবল, সুপার স্টার, হ্যাভেলস ও হামকো ব্যাটারির সকল সাইজ ও মডেল সরাসরি দেখে পরখ করে নেয়ার চমৎকার পরিবেশ রয়েছে।
+          </p>
+
+          <div class="space-y-3 text-xs">
+            <div class="flex items-start gap-3 p-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
+              <i class="fas fa-map-marked-alt text-orange-600 text-lg mt-0.5"></i>
+              <div>
+                <strong class="text-slate-900 block font-bold">শোরুমের পূর্ণ ঠিকানা:</strong>
+                <span class="text-slate-600">মিশন হাসপাতালের পূর্ব পার্শ্বে, ঢাকা রোড, বড় হরিশপুর, নাটোর - ৬৪০০।</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
+              <i class="fas fa-clock text-blue-600 text-lg mt-0.5"></i>
+              <div>
+                <strong class="text-slate-900 block font-bold">দোকান খোলা থাকার সময়সূচি:</strong>
+                <span class="text-slate-600">শনিবার থেকে বৃহস্পতিবার: সকাল ৮:০০ টা – রাত ১০:০০ টা | শুক্রবার: বিকেল ৩:০০ টা – রাত ১০:০০ টা।</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
+              <i class="fas fa-phone-volume text-emerald-600 text-lg mt-0.5"></i>
+              <div>
+                <strong class="text-slate-900 block font-bold">জরুরি মোবাইল যোগাযোগ:</strong>
+                <span class="text-slate-700 font-bold">০১৭১৪-২৪৬৮৬৬, ০১৭৮০-৯০৪৮৭৮, ০১৩০০-১২২৪০০</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Maps Embed for Boro Horishpur Natore -->
+        <div class="lg:col-span-6 bg-white p-3 rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+          <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-slate-200">
+            <iframe 
+              src="https://maps.google.com/maps?q=Boro+Harishpur,+Natore,+Bangladesh&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+              class="w-full h-full border-0" 
+              allowfullscreen="" 
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. ADMIN PORTAL SECTION (Initially hidden until logged in) -->
+  <section id="admin-portal-section" class="hidden py-14 bg-slate-900 text-white px-4 border-t-4 border-orange-500">
+    <div class="max-w-7xl mx-auto space-y-6">
+      <div class="flex flex-wrap items-center justify-between pb-4 border-b border-slate-800 gap-4">
+        <div>
+          <span class="px-2.5 py-0.5 text-[11px] font-bold bg-orange-600 text-white rounded-md uppercase">Database Admin</span>
+          <h2 class="text-2xl font-black text-white mt-1">সারোয়ার ইলেকট্রিক ব্যাকএন্ড ম্যানেজমেন্ট পোর্টাল</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="exportDatabaseBackup()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl text-xs font-bold flex items-center gap-1.5">
+            <i class="fas fa-download"></i> ডাটাবেস ব্যাকআপ (JSON)
+          </button>
+          <button onclick="sessionStorage.removeItem('seh_admin_token'); location.reload();" class="px-3.5 py-2 bg-red-600 hover:bg-red-700 rounded-xl text-xs font-bold">
+            লগআউট
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700">
+          <span class="text-slate-400 text-[11px] block">মোট অর্ডার</span>
+          <strong id="stat-orders" class="text-2xl font-black text-white">0</strong>
+        </div>
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700">
+          <span class="text-slate-400 text-[11px] block">মোট বিক্রয় রেভিনিউ</span>
+          <strong id="stat-revenue" class="text-xl font-black text-emerald-400">৳0</strong>
+        </div>
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700">
+          <span class="text-slate-400 text-[11px] block">অপেক্ষমাণ অর্ডার</span>
+          <strong id="stat-pending" class="text-2xl font-black text-amber-400">0</strong>
+        </div>
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700">
+          <span class="text-slate-400 text-[11px] block">হোলসেল কোটেশন</span>
+          <strong id="stat-quotes" class="text-2xl font-black text-blue-400">0</strong>
+        </div>
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700">
+          <span class="text-slate-400 text-[11px] block">ইলেকট্রিশিয়ান রিকোয়েস্ট</span>
+          <strong id="stat-services" class="text-2xl font-black text-purple-400">0</strong>
+        </div>
+        <div class="bg-slate-800 p-3.5 rounded-2xl border border-slate-700">
+          <span class="text-slate-400 text-[11px] block">মোট সক্রিয় পণ্য</span>
+          <strong id="stat-products" class="text-2xl font-black text-orange-400">0</strong>
+        </div>
+      </div>
+
+      <!-- Direct Link to Dedicated Full Admin Dashboard -->
+      <div class="p-4 bg-gradient-to-r from-orange-950/80 via-slate-900 to-slate-800 rounded-2xl border border-orange-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-orange-600 text-white flex items-center justify-center text-lg flex-shrink-0">
+            <i class="fas fa-desktop"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-sm">সম্পূর্ণ ফিচারযুক্ত এডমিন ড্যাশবোর্ড (Full Control Console)</h4>
+            <p class="text-xs text-slate-300">সকল পণ্য এডিট, ছবি আপলোড, ইনভেন্টরি, ইনভয়েস প্রিন্ট, ব্যাকআপ ও সেটিংস কন্ট্রোল করুন।</p>
+          </div>
+        </div>
+        <a href="admin.html" class="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-600/30 whitespace-nowrap">
+          <span>এডমিন ড্যাশবোর্ড খুলুন (admin.html)</span> <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <!-- Orders List in Admin -->
+      <div class="bg-slate-800/90 rounded-2xl p-5 border border-slate-700">
+        <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+          <i class="fas fa-shopping-cart text-orange-500"></i> অনলাইন অর্ডার প্রসেসিং তালিকা (Orders List)
+        </h3>
+        <div id="admin-orders-list" class="space-y-2">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- Quotations in Admin -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-slate-800/90 rounded-2xl p-5 border border-slate-700">
+          <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <i class="fas fa-file-invoice text-blue-400"></i> ঠিকাদার ও হোলসেল কোটেশন রিকোয়েস্ট
+          </h3>
+          <div id="admin-quotes-list" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <div class="bg-slate-800/90 rounded-2xl p-5 border border-slate-700">
+          <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <i class="fas fa-user-cog text-emerald-400"></i> ইলেকট্রিশিয়ান সার্ভিস বুকিং রিকোয়েস্ট
+          </h3>
+          <div id="admin-bookings-list" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. FOOTER -->
+  <footer class="bg-navy-950 text-slate-400 py-12 px-4 text-xs border-t border-slate-800">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      
+      <div class="space-y-3">
+        <div class="flex items-center gap-2.5">
+          <img src="images/fb/logo.jpg" alt="Sarowar Electric" class="w-10 h-10 rounded-xl object-cover border border-orange-500">
+          <span class="text-base font-extrabold text-white">সারোয়ার ইলেকট্রিক</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          ইলেকট্রিক্স ও হার্ডওয়্যার পণ্য খুচরা ও পাইকারি বিক্রেতা। আমরা হামকো অথোরাইজড ডিলার ও আর আর কেবল অনুমোদিত সরবরাহকারী।
+        </p>
+        <div class="flex gap-2 pt-1">
+          <a href="https://web.facebook.com/sarowarelectrics" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-blue-600 text-white flex items-center justify-center transition">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://wa.me/8801780904878" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-emerald-600 text-white flex items-center justify-center transition">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <a href="mailto:sarowarelectrics@gmail.com" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-orange-600 text-white flex items-center justify-center transition">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white text-sm mb-3">দ্রুত লিঙ্কসমূহ</h4>
+        <ul class="space-y-2">
+          <li><a href="#products-section" class="hover:text-white transition">তার ও ক্যাবল সমগ্র</a></li>
+          <li><a href="#hamko-section" class="hover:text-white transition">হামকো আইপিএস ব্যাটারি</a></li>
+          <li><a href="#estimator-section" class="hover:text-white transition">বিল্ডিং ওয়্যারিং ক্যালকুলেটর</a></li>
+          <li><a href="#wholesale-section" class="hover:text-white transition">ঠিকাদার হোলসেল কোটেশন</a></li>
+          <li><a href="#services-section" class="hover:text-white transition">ইলেকট্রিশিয়ান সার্ভিস নাটোর</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white text-sm mb-3">প্রধান ব্র্যান্ড পার্টনার</h4>
+        <ul class="space-y-2">
+          <li>• RR Kābel / RR Imperial Electricals</li>
+          <li>• HAMKO Batteries & IPS</li>
+          <li>• Super Star Group (SSG)</li>
+          <li>• Havells & Schneider Electric</li>
+          <li>• National Tubes & Gazi PVC Pipes</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white text-sm mb-3">যোগাযোগের ঠিকানা</h4>
+        <p class="text-xs text-slate-400 mb-2 leading-relaxed">
+          মিশন হাসপাতালের পূর্ব পার্শ্বে, ঢাকা রোড, বড় হরিশপুর, নাটোর - ৬৪০০।
+        </p>
+        <p class="text-xs text-slate-300 font-bold mb-1">হটলাইন: 01780-904878</p>
+        <p class="text-xs text-slate-400">বিকল্প: 01714-246866, 01300-122400</p>
+        <p class="text-xs text-slate-400 mt-1">Email: sarowarelectrics@gmail.com</p>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-8 mt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-2">
+      <p>© 2026 Sarowar Electric & Hardware (সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার). সর্বস্বত্ব সংরক্ষিত।</p>
+      <p class="flex items-center gap-1">
+        <span>Designed & Powered with SQLite Database</span> • <a href="admin.html" target="_blank" class="text-orange-400 font-bold hover:underline">এডমিন ড্যাশবোর্ড (Admin Dashboard)</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- 14. SLIDE-OVER CART DRAWER -->
+  <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between border-l border-slate-200">
+    <!-- Cart Header -->
+    <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <i class="fas fa-shopping-bag text-orange-500"></i>
+        <h3 class="font-bold text-sm" data-i18n="cart_title">আপনার শপিং কার্ট</h3>
+      </div>
+      <button onclick="toggleCartDrawer(false)" class="text-slate-400 hover:text-white p-1">
+        <i class="fas fa-times text-base"></i>
+      </button>
+    </div>
+
+    <!-- Cart Items Scrollable List -->
+    <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 bg-slate-50">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Cart Summary & Checkout Form -->
+    <div class="p-4 bg-white border-t border-slate-200 shadow-lg">
+      <div class="space-y-1.5 text-xs pb-3 border-b border-slate-100">
+        <div class="flex justify-between text-slate-500">
+          <span data-i18n="cart_subtotal">উপমোট</span>
+          <strong id="cart-subtotal-val" class="text-slate-800">৳0</strong>
+        </div>
+        <div class="flex justify-between text-slate-500">
+          <span data-i18n="cart_delivery">ডেলিভারি চার্জ</span>
+          <strong id="cart-delivery-val" class="text-slate-800">৳50</strong>
+        </div>
+        <div class="flex justify-between text-sm font-black text-slate-900 pt-1">
+          <span data-i18n="cart_total">সর্বমোট</span>
+          <strong id="cart-total-val" class="text-orange-600">৳0</strong>
+        </div>
+      </div>
+
+      <!-- Checkout Form Trigger Accordion -->
+      <details class="mt-3 group">
+        <summary id="btn-checkout-proceed" class="w-full py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-orange-600/30">
+          <i class="fas fa-lock"></i>
+          <span>ডেলিভারির ঠিকানা দিন ও অর্ডার করুন</span>
+        </summary>
+
+        <form id="checkout-form" class="mt-3 space-y-2.5 text-xs pt-2">
+          <div>
+            <label class="block text-slate-700 font-bold mb-0.5">আপনার নাম *</label>
+            <input type="text" id="order-name" required placeholder="মোঃ ফারুক ইসলাম" class="w-full p-2 rounded-lg border border-slate-200 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-slate-700 font-bold mb-0.5">মোবাইল নম্বর *</label>
+            <input type="tel" id="order-phone" required placeholder="017XXXXXXXX" class="w-full p-2 rounded-lg border border-slate-200 bg-slate-50">
+          </div>
+          <div>
+            <label class="block text-slate-700 font-bold mb-0.5">ডেলিভারি এলাকা নির্বাচন করুন</label>
+            <select id="order-upazila" onchange="renderCartDrawer()" class="w-full p-2 rounded-lg border border-slate-200 bg-slate-50 font-semibold">
+              <option value="Natore Sadar" selected>নাটোর সদর (ডেলিভারি ৳৫০)</option>
+              <option value="Baraigram">বড়াইগ্রাম (ডেলিভারি ৳১০০)</option>
+              <option value="Gurudaspur">গুরুদাসপুর (ডেলিভারি ৳১০০)</option>
+              <option value="Singra">সিংড়া (ডেলিভারি ৳১০০)</option>
+              <option value="Lalpur">লালপুর (ডেলিভারি ৳১০০)</option>
+              <option value="Bagatipara">বাগাতিপাড়া (ডেলিভারি ৳১০০)</option>
+              <option value="Naldanga">নলডাঙ্গা (ডেলিভারি ৳১০০)</option>
+              <option value="store_pickup">সরাসরি বড় হরিশপুর শোরুম থেকে পিকআপ (ফ্রি)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-700 font-bold mb-0.5">সম্পূর্ণ ঠিকানা *</label>
+            <textarea id="order-address" required rows="2" placeholder="বাড়ি নং, রাস্তা, এলাকার নাম..." class="w-full p-2 rounded-lg border border-slate-200 bg-slate-50"></textarea>
+          </div>
+
+          <!-- Payment Method -->
+          <div>
+            <label class="block text-slate-700 font-bold mb-1">পেমেন্ট মেথড:</label>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="flex items-center gap-1.5 p-2 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer">
+                <input type="radio" name="payment_method" value="cod" checked>
+                <span>ক্যাশ অন ডেলিভারি</span>
+              </label>
+              <label class="flex items-center gap-1.5 p-2 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer">
+                <input type="radio" name="payment_method" value="bkash">
+                <span>বিকাশ / নগদ</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex gap-2 pt-2">
+            <button type="submit" id="btn-submit-order" class="flex-1 py-2.5 bg-slate-900 hover:bg-black text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5">
+              <i class="fas fa-check-circle text-orange-500"></i> অর্ডার নিশ্চিত করুন
+            </button>
+            <button type="button" onclick="orderViaWhatsApp()" class="py-2.5 px-3 bg-emerald-600 text-white rounded-xl font-bold" title="WhatsApp এ অর্ডার পাঠান">
+              <i class="fab fa-whatsapp text-sm"></i>
+            </button>
+          </div>
+        </form>
+      </details>
+    </div>
+  </div>
+
+  <!-- 15. PRODUCT QUICK VIEW MODAL -->
+  <div id="product-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl">
+      <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="product-modal-content">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 16. ORDER SUCCESS MODAL -->
+  <div id="order-success-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl space-y-4">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto shadow-inner">
+        <i class="fas fa-check"></i>
+      </div>
+      <div>
+        <h3 class="text-xl font-black text-slate-900 mb-1">অর্ডার সফলভাবে গৃহীত হয়েছে!</h3>
+        <p class="text-xs text-slate-500">সারোয়ার ইলেকট্রিক থেকে দ্রুত আপনার দেওয়া নম্বরে কল দিয়ে অর্ডার কনফার্ম করা হবে।</p>
+      </div>
+
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-left space-y-1.5">
+        <div class="flex justify-between">
+          <span class="text-slate-500">অর্ডার নম্বর:</span>
+          <strong id="success-order-number" class="text-slate-900">SEH-000000</strong>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">সর্বমোট বিল:</span>
+          <strong id="success-order-amount" class="text-orange-600 font-bold">৳0</strong>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">মোবাইল:</span>
+          <strong id="success-order-phone" class="text-slate-900">-</strong>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <a id="success-whatsapp-btn" href="#" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30">
+          <i class="fab fa-whatsapp text-base"></i> WhatsApp এ কনফার্মেশন পাঠান
+        </a>
+        <button onclick="document.getElementById('order-success-modal').classList.add('hidden')" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl">
+          পণ্য কেনাকাটায় ফিরে যান
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 17. TRACK ORDER MODAL -->
+  <div id="track-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+      <button onclick="document.getElementById('track-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <h3 class="text-lg font-bold text-slate-900 mb-1 flex items-center gap-2">
+        <i class="fas fa-truck text-orange-600"></i> অর্ডার ট্র্যাকিং
+      </h3>
+      <p class="text-xs text-slate-400 mb-4">আপনার অর্ডার নম্বর (যেমন: SEH-123456) বা ফোন নম্বর লিখুন:</p>
+
+      <div class="flex gap-2">
+        <input type="text" id="track-order-input" placeholder="অর্ডার নং বা মোবাইল..." class="flex-1 p-2.5 rounded-xl border border-slate-200 text-xs bg-slate-50 outline-none focus:border-orange-500">
+        <button onclick="trackOrder()" class="px-4 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-black transition">
+          ট্র্যাক
+        </button>
+      </div>
+
+      <div id="track-order-result"></div>
+    </div>
+  </div>
+
+  <!-- 18. ADMIN PIN LOGIN MODAL -->
+  <div id="admin-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
+      <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="text-center mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-xl mx-auto mb-2">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <h3 class="text-base font-extrabold text-slate-900">এডমিন ম্যানেজমেন্ট লগইন</h3>
+        <p class="text-[11px] text-slate-400">ম্যানেজমেন্ট প্যানেলে প্রবেশ করতে ৪ ডিজিটের পিন দিন (ডিফল্ট: 1234)</p>
+      </div>
+
+      <form id="admin-login-form" class="space-y-3">
+        <input type="password" id="admin-pin-input" required placeholder="PIN প্রবেশ করান (1234)" class="w-full p-3 text-center tracking-widest text-lg font-bold rounded-xl border border-slate-200 bg-slate-50 outline-none focus:border-orange-500">
+        <button type="submit" class="w-full py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs transition">
+          লগইন করুন
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 19. FLOATING ACTION BUTTONS -->
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col gap-3">
+    <!-- Call Store Button -->
+    <a href="tel:01780904878" class="floating-btn w-12 h-12 rounded-full bg-slate-900 text-white flex items-center justify-center text-lg shadow-xl hover:bg-black" title="সরাসরি কল করুন">
+      <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <!-- WhatsApp Speed Dial -->
+    <a href="https://wa.me/8801780904878?text=%E0%A6%86%E0%A6%B8%E0%A6%B8%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A7%81%20%E0%A6%86%E0%A6%B2%E0%A6%BE%E0%A6%87%E0%A6%95%E0%A7%81%E0%A6%AE%E0%A5%A4%20%E0%A6%B8%E0%A6%BE%E0%A6%B0%E0%A7%8B%E0%A6%AF%E0%A6%BC%E0%A6%BE%E0%A6%B0%20%E0%A6%87%E0%A6%B2%E0%A7%87%E0%A6%95%E0%A7%8D%E0%A6%9F%E0%A7%8D%E0%A6%B0%E0%A6%BF%E0%A6%95%E0%A6%B8%20%E0%A6%B6%E0%A7%8B%E0%A6%B0%E0%A7%81%E0%A6%AE%20%E0%A6%A5%E0%A7%87%E0%A6%95%E0%A7%87%20%E0%A6%AE%E0%A6%BE%E0%A6%B2%E0%A6%BE%E0%A6%AE%E0%A6%BE%E0%A6%B2%20%E0%A6%85%E0%A6%B0%E0%A7%8D%E0%A6%A1%E0%A6%BE%E0%A6%B0%20%E0%A6%95%E0%A6%B0%E0%A6%A4%E0%A7%87%20%E0%A6%9A%E0%A6%BE%E0%A6%87%E0%A5%A4" target="_blank" class="floating-btn w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl shadow-xl hover:bg-emerald-700 pulse-slow" title="WhatsApp Chat">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <!-- Application Data & Script -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+

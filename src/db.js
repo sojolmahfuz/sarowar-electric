@@ -1,0 +1,622 @@
+const initSqlJs = require('sql.js');
+const fs = require('fs');
+const path = require('path');
+
+const DB_PATH = path.join(__dirname, '..', 'data', 'sarowar.sqlite');
+let dbInstance = null;
+let saveTimer = null;
+
+function saveDb() {
+  if (!dbInstance) return;
+  try {
+    const data = dbInstance.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(DB_PATH, buffer);
+  } catch (err) {
+    console.error('Error saving SQLite DB to disk:', err);
+  }
+}
+
+function scheduleSave() {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    saveDb();
+  }, 100);
+}
+
+async function getDb() {
+  if (dbInstance) return dbInstance;
+
+  const SQL = await initSqlJs();
+  let db;
+
+  if (fs.existsSync(DB_PATH)) {
+    try {
+      const fileBuffer = fs.readFileSync(DB_PATH);
+      db = new SQL.Database(fileBuffer);
+      console.log('Loaded existing SQLite database from', DB_PATH);
+    } catch (err) {
+      console.warn('Could not read existing SQLite DB, initializing new one:', err.message);
+      db = new SQL.Database();
+    }
+  } else {
+    db = new SQL.Database();
+    console.log('Created fresh SQLite database at', DB_PATH);
+  }
+
+  dbInstance = db;
+  initSchema(db);
+  seedInitialData(db);
+  saveDb();
+
+  return dbInstance;
+}
+
+function initSchema(db) {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS categories (
+      id TEXT PRIMARY KEY,
+      name_en TEXT NOT NULL,
+      name_bn TEXT NOT NULL,
+      icon TEXT,
+      description_en TEXT,
+      description_bn TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS products (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title_en TEXT NOT NULL,
+      title_bn TEXT NOT NULL,
+      category TEXT NOT NULL,
+      brand TEXT NOT NULL,
+      price REAL NOT NULL,
+      original_price REAL,
+      unit TEXT NOT NULL,
+      wholesale_price REAL,
+      wholesale_min_qty INTEGER DEFAULT 5,
+      in_stock INTEGER DEFAULT 1,
+      stock_qty INTEGER DEFAULT 50,
+      featured INTEGER DEFAULT 0,
+      rating REAL DEFAULT 4.8,
+      reviews_count INTEGER DEFAULT 12,
+      badge TEXT,
+      image_url TEXT,
+      description_en TEXT,
+      description_bn TEXT,
+      specs TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS orders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      order_number TEXT UNIQUE NOT NULL,
+      customer_name TEXT NOT NULL,
+      customer_phone TEXT NOT NULL,
+      customer_email TEXT,
+      delivery_address TEXT NOT NULL,
+      upazila TEXT DEFAULT 'Natore Sadar',
+      payment_method TEXT DEFAULT 'cod',
+      payment_status TEXT DEFAULT 'pending',
+      transaction_id TEXT,
+      subtotal REAL NOT NULL,
+      delivery_fee REAL DEFAULT 0,
+      total_amount REAL NOT NULL,
+      status TEXT DEFAULT 'Pending',
+      items_json TEXT NOT NULL,
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS quotations (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      quote_number TEXT UNIQUE NOT NULL,
+      client_name TEXT NOT NULL,
+      client_type TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      email TEXT,
+      project_type TEXT,
+      location TEXT,
+      materials_needed TEXT NOT NULL,
+      estimated_budget TEXT,
+      status TEXT DEFAULT 'Pending',
+      notes TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS service_bookings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      booking_number TEXT UNIQUE NOT NULL,
+      customer_name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      service_type TEXT NOT NULL,
+      preferred_date TEXT,
+      address TEXT NOT NULL,
+      urgency TEXT DEFAULT 'Standard',
+      details TEXT,
+      status TEXT DEFAULT 'Pending',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS reviews (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      author_name TEXT NOT NULL,
+      location TEXT,
+      rating INTEGER NOT NULL,
+      comment TEXT NOT NULL,
+      product_id INTEGER,
+      verified INTEGER DEFAULT 1,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS site_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT
+    );
+  `);
+}
+
+function seedInitialData(db) {
+  // Check if categories exist
+  const resCat = db.exec("SELECT COUNT(*) AS c FROM categories");
+  const catCount = resCat[0]?.values[0][0] || 0;
+
+  if (catCount === 0) {
+    const cats = [
+      ['cables', 'Cables & Electric Wires', 'তার ও কেবল সামগ্রী', 'fa-bolt', 'RR Kabel, BBS, and certified domestic & industrial copper wiring', 'আর আর কেবল, বি বি এস এবং সার্টিফাইড হাউজ ওয়্যারিং তার'],
+      ['hamko_power', 'Hamko IPS & Solar Solutions', 'হামকো আইপিএস ও সোলার ব্যাটারি', 'fa-car-battery', 'Authorized Hamko Tubular batteries, Solar Inverters, and UPS systems', 'অথোরাইজড হামকো টিউবুলার ব্যাটারি, আইপিএস ও সোলার ইনভার্টার'],
+      ['lighting', 'Modern LED & Decorative Lights', 'আধুনিক লাইটিং ও ফিক্সচার', 'fa-lightbulb', 'Energy saving LED panels, COB lights, floodlights, and batten tubes', 'বিদ্যুৎ সাশ্রয়ী এলইডি প্যানেল, টিউব লাইট, ফলস সিলিং স্পটলাইট ও ফ্লাডলাইট'],
+      ['switches', 'Switches & Modular Boards', 'সুইচ ও মডুলার বোর্ড', 'fa-toggle-on', 'Luxury modular gang switches, waterproof switchboxes & piano switches', 'আধুনিক গ্যাং সুইচ, মডুলার বোর্ড, সারফেস বক্স ও ওয়াটারপ্রুফ সকেট'],
+      ['switchgear', 'Circuit Breakers & Protection', 'সার্কিট ব্রেকার ও ডিস্ট্রিবিউশন', 'fa-shield-halved', 'MCB, MCCB, RCCB, distribution boxes, and safety changeovers', 'মেইন সুইচ, ডিস্ট্রিবিউশন বক্স, সিঙ্গেল ও ডাবল পোল এমসিবি ব্রেকার'],
+      ['hardware_plumbing', 'Hardware & PVC Supplies', 'হার্ডওয়্যার ও পিভিসি পাইপ', 'fa-wrench', 'High grade PVC pipes, bends, tools, drill accessories & hardware', 'উন্নতমানের পিভিসি পাইপ, ব্যান্ড, সকেট, ড্রিল বিট ও ইলেকট্রিক্যাল টুলস'],
+      ['fans', 'Ceiling & Exhaust Fans', 'ফ্যান ও ভেন্টিলেশন', 'fa-fan', 'Super Star, Walton, and Hamko energy-saving BLDC & high-speed fans', 'সুপার স্টার ও হামকো হাই-স্পিড সিলিং ফ্যান, এগজস্ট ও স্ট্যান্ড ফ্যান']
+    ];
+
+    const stmt = db.prepare("INSERT INTO categories (id, name_en, name_bn, icon, description_en, description_bn) VALUES (?, ?, ?, ?, ?, ?)");
+    cats.forEach(c => stmt.run(c));
+    stmt.free();
+  }
+
+  // Check products
+  const resProd = db.exec("SELECT COUNT(*) AS c FROM products");
+  const prodCount = resProd[0]?.values[0][0] || 0;
+
+  if (prodCount === 0) {
+    const products = [
+      {
+        title_en: 'RR Kabel Superex FR Single Core Cable 1.5 RM (100m)',
+        title_bn: 'আর আর কেবল সুপারএক্স এফআর সিঙ্গেল কোর তার ১.৫ আরএম (১০০ মি.)',
+        category: 'cables',
+        brand: 'RR Kabel',
+        price: 3850,
+        original_price: 4200,
+        unit: 'Coil (100m)',
+        wholesale_price: 3650,
+        wholesale_min_qty: 3,
+        in_stock: 1,
+        stock_qty: 85,
+        featured: 1,
+        rating: 4.9,
+        reviews_count: 28,
+        badge: 'Authorized RR Kabel',
+        image_url: '/images/fb/post1.jpg',
+        description_en: '100% pure electrolytic high-conductivity copper conductor with Flame Retardant (FR) PVC insulation. Wires without worries for residential building wiring.',
+        description_bn: '১০০% বিশুদ্ধ ইলেক্ট্রোলাইটিক কপার কন্ডাক্টর ও ফ্লেম রিটার্ডেন্ট (FR) ইনসুলেশন যুক্ত। বাড়ি ও ফ্ল্যাটের নিরাপদ ওয়্যারিংয়ের সেরা পছন্দ।',
+        specs: JSON.stringify({ 'Core': 'Single Core', 'Size': '1.5 RM / 1x1.5 sqmm', 'Insulation': 'Flame Retardant (FR) PVC', 'Standard': 'BDS / IEC 60227', 'Warranty': 'Guaranteed Pure Copper' })
+      },
+      {
+        title_en: 'RR Kabel Superex FR Single Core Cable 2.5 RM (100m)',
+        title_bn: 'আর আর কেবল সুপারএক্স এফআর সিঙ্গেল কোর তার ২.৫ আরএম (১০০ মি.)',
+        category: 'cables',
+        brand: 'RR Kabel',
+        price: 5950,
+        original_price: 6400,
+        unit: 'Coil (100m)',
+        wholesale_price: 5650,
+        wholesale_min_qty: 3,
+        in_stock: 1,
+        stock_qty: 60,
+        featured: 1,
+        rating: 5.0,
+        reviews_count: 34,
+        badge: 'Heavy Duty',
+        image_url: '/images/fb/product8.jpg',
+        description_en: 'Heavy duty 2.5 RM flame retardant cable engineered for power sockets, air conditioners, water pumps, and high-load appliances.',
+        description_bn: 'এসি, গিজার, পানির পাম্প ও পাওয়ার সকেটের জন্য মানসম্মত ২.৫ আরএম ফায়ার রিটার্ডেন্ট প্রিমিয়াম কপার তার।',
+        specs: JSON.stringify({ 'Core': 'Single Core', 'Size': '2.5 RM / 1x2.5 sqmm', 'Insulation': 'FR PVC Oxygen Index > 29%', 'Current Rating': 'Up to 24 Amps', 'Warranty': 'Authentic Certified' })
+      },
+      {
+        title_en: 'RR Kabel Multicore Flexible Copper Cable 4.0 RM (100m)',
+        title_bn: 'আর আর কেবল মাল্টিকোর ফ্লেক্সিবল কপার তার ৪.০ আরএম',
+        category: 'cables',
+        brand: 'RR Kabel',
+        price: 9400,
+        original_price: 9900,
+        unit: 'Coil (100m)',
+        wholesale_price: 8950,
+        wholesale_min_qty: 2,
+        in_stock: 1,
+        stock_qty: 30,
+        featured: 0,
+        rating: 4.8,
+        reviews_count: 14,
+        badge: 'Commercial Grade',
+        image_url: '/images/fb/post1.jpg',
+        description_en: 'High amperage 4.0 RM multi-strand copper wire ideal for sub-distribution panels, industrial machinery, and commercial buildings.',
+        description_bn: 'শিল্প কারখানা, সাব-ডিস্ট্রিবিউশন প্যানেল ও বাণিজ্যিক ভবনের ভারী লোডের জন্য ৪.০ আরএম ফ্লেক্সিবল তার।',
+        specs: JSON.stringify({ 'Size': '4.0 RM', 'Conductor': 'Class 5 Flexible Copper', 'Rated Voltage': '450/750V', 'Standard': 'IS 694 / BDS' })
+      },
+      {
+        title_en: 'Hamko HPD 165Ah Deep Cycle Tubular Battery for IPS & Solar',
+        title_bn: 'হামকো এইচপিডি ১৬৫ অ্যাম্পিয়ার ডিপ সাইকেল টিউবুলার আইপিএস ব্যাটারি',
+        category: 'hamko_power',
+        brand: 'Hamko',
+        price: 24500,
+        original_price: 26000,
+        unit: 'Piece',
+        wholesale_price: 23200,
+        wholesale_min_qty: 2,
+        in_stock: 1,
+        stock_qty: 25,
+        featured: 1,
+        rating: 5.0,
+        reviews_count: 42,
+        badge: 'Authorized Hamko Dealer',
+        image_url: '/images/fb/product6.jpg',
+        description_en: 'Authorized Hamko 165Ah Heavy Duty Tubular Plate Battery. Designed for long power cuts, deep discharge resilience, and 30+ months official warranty.',
+        description_bn: 'সারোয়ার ইলেকট্রিক হামকো অর্থরাইজড ডিলার। ১৬৫ অ্যাম্পিয়ার দীর্ঘস্থায়ী টিউবুলার ব্যাটারি, গভীর লোডশেডিংয়ে দীর্ঘ ব্যাকআপের নিশ্চয়তা।',
+        specs: JSON.stringify({ 'Brand': 'HAMKO', 'Model': 'HPD 165', 'Capacity': '165 Ah', 'Plate Type': 'Tall Tubular', 'Official Warranty': '30 Months Official Warranty Replacement' })
+      },
+      {
+        title_en: 'Hamko Combo Supreme 1000VA Digital Pure Sine Wave IPS Inverter',
+        title_bn: 'হামকো কম্বো সুপ্রিম ১০০০ ভিএ ডিজিটাল পিওর সাইন ওয়েভ আইপিএস ইনভার্টার',
+        category: 'hamko_power',
+        brand: 'Hamko',
+        price: 13500,
+        original_price: 14800,
+        unit: 'Set',
+        wholesale_price: 12800,
+        wholesale_min_qty: 2,
+        in_stock: 1,
+        stock_qty: 18,
+        featured: 1,
+        rating: 4.9,
+        reviews_count: 31,
+        badge: 'Top Choice',
+        image_url: '/images/fb/product7.jpg',
+        description_en: 'DSP Pure Sine Wave Technology. Runs 5 Ceiling Fans, 8 LED lights, LED TV, Wi-Fi router smoothly with zero hum and fast battery charging.',
+        description_bn: 'ডিএসপি পিওর সাইন ওয়েভ প্রযুক্তি। ৫টি ফ্যান, ৮টি লাইট ও টিভি অনায়াসে চলে। শব্দহীন ও আধুনিক ডিজিটাল ডিসপ্লে।',
+        specs: JSON.stringify({ 'Capacity': '1000 VA / 800 Watts', 'Output Waveform': 'Pure Sine Wave', 'Display': 'LCD Multi-Status Screen', 'Warranty': '24 Months Hamko Warranty' })
+      },
+      {
+        title_en: 'Hamko Solar Hybrid Inverter 1200VA with MPPT Solar Charger',
+        title_bn: 'হামকো সোলার হাইব্রিড ইনভার্টার ১২০০ ভিএ (এমপিপিটি সহ)',
+        category: 'hamko_power',
+        brand: 'Hamko',
+        price: 18900,
+        original_price: 20500,
+        unit: 'Piece',
+        wholesale_price: 17800,
+        wholesale_min_qty: 1,
+        in_stock: 1,
+        stock_qty: 12,
+        featured: 0,
+        rating: 4.7,
+        reviews_count: 19,
+        badge: 'Solar Powered',
+        image_url: '/images/fb/product6.jpg',
+        description_en: 'Smart hybrid solar inverter seamlessly combining solar panels, battery, and national grid power with built-in MPPT controller for maximum efficiency.',
+        description_bn: 'সোলার ও বিদ্যুৎ গ্রিড থেকে স্বয়ংক্রিয় ব্যাটারি চার্জিং সুবিধা ও সর্বোচ্চ বিদ্যুৎ সাশ্রয়কারী আধুনিক সিস্টেম।',
+        specs: JSON.stringify({ 'Solar Input': 'Up to 60V MPPT', 'Battery Voltage': '12V DC', 'Efficiency': '> 94%', 'Warranty': '2 Years' })
+      },
+      {
+        title_en: 'Super Star 18W Slim Round Recessed LED Ceiling Panel Light',
+        title_bn: 'সুপার স্টার ১৮ ওয়াট স্লিম রাউন্ড ফলস সিলিং প্যানেল লাইট',
+        category: 'lighting',
+        brand: 'Super Star',
+        price: 480,
+        original_price: 550,
+        unit: 'Piece',
+        wholesale_price: 420,
+        wholesale_min_qty: 10,
+        in_stock: 1,
+        stock_qty: 150,
+        featured: 1,
+        rating: 4.8,
+        reviews_count: 53,
+        badge: 'Energy Saver',
+        image_url: '/images/fb/cover.jpg',
+        description_en: 'Ultra-thin architectural recessed panel light with uniform glare-free daylight white illumination. Aluminum heat sink ensures 25,000+ hours lifespan.',
+        description_bn: 'আধুনিক ফলস সিলিংয়ের জন্য অত্যন্ত জনপ্রিয়। চোখের জন্য আরামদায়ক আলো এবং দীর্ঘস্থায়ী অ্যালুমিনিয়াম হিটসিঙ্ক বডি।',
+        specs: JSON.stringify({ 'Wattage': '18 Watts', 'Color Temp': '6500K Daylight White / 3000K Warm', 'Hole Cutout': '6 Inch (150mm)', 'Warranty': '2 Years Official Warranty' })
+      },
+      {
+        title_en: 'National Batten LED Tube Light 20W (4 Feet High Lumen)',
+        title_bn: 'ন্যাশনাল ব্যাটেন এলইডি টিউব লাইট ২০ ওয়াট (৪ ফিট)',
+        category: 'lighting',
+        brand: 'National',
+        price: 320,
+        original_price: 380,
+        unit: 'Piece',
+        wholesale_price: 280,
+        wholesale_min_qty: 10,
+        in_stock: 1,
+        stock_qty: 200,
+        featured: 1,
+        rating: 4.9,
+        reviews_count: 67,
+        badge: 'Best Seller',
+        image_url: '/images/fb/product4.jpg',
+        description_en: 'Ready to mount complete fitting tube light. Replaces traditional fluorescent tubes with 85% energy savings and instant flicker-free start.',
+        description_bn: 'সম্পূর্ণ ফিটিংস সহ ৪ ফুট এলইডি টিউব লাইট। দোকান, বাড়ি ও কারখানায় উজ্জ্বল আলোর জন্য আদর্শ।',
+        specs: JSON.stringify({ 'Length': '4 Feet (1200mm)', 'Power': '20 Watts', 'Luminous Flux': '2200 Lumens', 'Warranty': '1 Year Replacement' })
+      },
+      {
+        title_en: 'Havells / Super Star 50W Outdoor Waterproof LED Flood Light IP66',
+        title_bn: '৫০ ওয়াট আউটডোর ওয়াটারপ্রুফ এলইডি ফ্লাড লাইট আইপি৬৬',
+        category: 'lighting',
+        brand: 'Super Star',
+        price: 1450,
+        original_price: 1650,
+        unit: 'Piece',
+        wholesale_price: 1300,
+        wholesale_min_qty: 4,
+        in_stock: 1,
+        stock_qty: 45,
+        featured: 0,
+        rating: 4.8,
+        reviews_count: 22,
+        badge: 'Weatherproof',
+        image_url: '/images/fb/cover.jpg',
+        description_en: 'Heavy-duty IP66 waterproof and dustproof exterior flood light. Perfect for shop fronts, gardens, parking zones, and roof gardens.',
+        description_bn: 'বৃষ্টি ও রোদে নষ্ট না হওয়া আইপি৬৬ ওয়াটারপ্রুফ ফ্লাড লাইট। দোকান বা ভবনের বাইরের অংশ আলোকিত করতে অত্যন্ত কার্যকর।',
+        specs: JSON.stringify({ 'Wattage': '50W', 'Waterproof Rating': 'IP66 Waterproof', 'Body': 'Die-cast Aluminum', 'Warranty': '2 Years' })
+      },
+      {
+        title_en: 'Super Star Luxury Glass Modular 8-Gang Switch Plate Set',
+        title_bn: 'সুপার স্টার লাক্সারি গ্লাস মডুলার ৮-গ্যাং সুইচ প্লেট সেট',
+        category: 'switches',
+        brand: 'Super Star',
+        price: 1250,
+        original_price: 1450,
+        unit: 'Set',
+        wholesale_price: 1100,
+        wholesale_min_qty: 5,
+        in_stock: 1,
+        stock_qty: 80,
+        featured: 1,
+        rating: 4.9,
+        reviews_count: 38,
+        badge: 'Luxury Touch',
+        image_url: '/images/fb/product1.jpg',
+        description_en: 'Toughened glass finish modern modular gang switch with silver contact points, LED indicator, and fire-resistant polycarbonate base.',
+        description_bn: 'ড্রয়িং রুম ও বেডরুমের আভিজাত্য বাড়াতে টেম্পারড গ্লাস ফিনিশ ৮-গ্যাং মডুলার সুইচ বোর্ড। টেকসই ও রূপালী কন্টাক্ট পয়েন্ট।',
+        specs: JSON.stringify({ 'Gangs': '8 Modular Units', 'Plate Material': 'Tempered Scratch-proof Glass', 'Current': '10A / 16A', 'Warranty': '5 Years' })
+      },
+      {
+        title_en: 'Multi-Socket Heavy Duty Power Strip with Surge Protection',
+        title_bn: 'হেভি ডিউটি মাল্টিপ্লাগ ও সার্জ প্রোটেকশন সকেট (৩ মিটার)',
+        category: 'switches',
+        brand: 'Super Star',
+        price: 680,
+        original_price: 780,
+        unit: 'Piece',
+        wholesale_price: 590,
+        wholesale_min_qty: 6,
+        in_stock: 1,
+        stock_qty: 110,
+        featured: 0,
+        rating: 4.8,
+        reviews_count: 45,
+        badge: 'Safety First',
+        image_url: '/images/fb/product2.jpg',
+        description_en: 'Universal multi-pin power strip with individual switches, overload reset fuse, and 3-meter copper cable for computer & home electronics.',
+        description_bn: 'টিভি, কম্পিউটার ও ফ্রিজের জন্য নিরাপদ সার্জ প্রটেক্টর ও ওভারলোড ফিউজযুক্ত উন্নত মাল্টিপ্লাগ।',
+        specs: JSON.stringify({ 'Sockets': '4 Universal + 2 USB', 'Cable Length': '3 Meters Pure Copper', 'Max Load': '2500 Watts' })
+      },
+      {
+        title_en: 'Schneider / Super Star Double Pole (DP) MCB Circuit Breaker 63A',
+        title_bn: 'ডাবল পোল (DP) এমসিবি সার্কিট ব্রেকার ৬৩ অ্যাম্পিয়ার',
+        category: 'switchgear',
+        brand: 'Super Star',
+        price: 850,
+        original_price: 980,
+        unit: 'Piece',
+        wholesale_price: 750,
+        wholesale_min_qty: 5,
+        in_stock: 1,
+        stock_qty: 70,
+        featured: 1,
+        rating: 5.0,
+        reviews_count: 29,
+        badge: 'Essential Safety',
+        image_url: '/images/fb/product8.jpg',
+        description_en: 'Provides instant short-circuit and overload trip protection for entire flat or shop. Standard DIN rail mounting.',
+        description_bn: 'পুরো বাসা বা বাণিজ্যিক প্রতিষ্ঠানের শর্ট সার্কিট ও ওভারলোড থেকে রক্ষায় মূল মেইন সার্কিট ব্রেকার।',
+        specs: JSON.stringify({ 'Rated Current': '63 Amps', 'Poles': '2 Pole (DP)', 'Breaking Capacity': '6kA / 10kA', 'Standard': 'IEC 60898-1' })
+      },
+      {
+        title_en: '8-Way Flush Metal Distribution Board (DB Box) with Transparent Door',
+        title_bn: '৮-ওয়ে মেটাল ডিস্ট্রিবিউশন ডিবি বক্স (স্বচ্ছ ডোর সহ)',
+        category: 'switchgear',
+        brand: 'National',
+        price: 1150,
+        original_price: 1300,
+        unit: 'Piece',
+        wholesale_price: 1000,
+        wholesale_min_qty: 4,
+        in_stock: 1,
+        stock_qty: 40,
+        featured: 0,
+        rating: 4.7,
+        reviews_count: 17,
+        badge: 'Rust Proof',
+        image_url: '/images/fb/product1.jpg',
+        description_en: 'Heavy gauge powder-coated sheet metal enclosure with copper neutral/earth link bars and smoke-tinted transparent door.',
+        description_bn: 'মজবুত পাউডার কোটেড মেটাল বডি এবং সুরক্ষিত নিউট্রাল-আর্থ কপার লিংক বার সহ ৮-ওয়ে ডিবি বক্স।',
+        specs: JSON.stringify({ 'Capacity': '8 Modules', 'Material': 'CRCA Sheet Steel 1.2mm', 'Protection': 'IP40' })
+      },
+      {
+        title_en: 'Gazi / National 1-Inch Heavy PVC Electrical Conduit Pipe (10ft bundle)',
+        title_bn: 'গাজী / ন্যাশনাল ১ ইঞ্চি হেভি পিভিসি ইলেকট্রিক্যাল কন্ডুইট পাইপ',
+        category: 'hardware_plumbing',
+        brand: 'Gazi',
+        price: 85,
+        original_price: 95,
+        unit: 'Pipe (10ft)',
+        wholesale_price: 76,
+        wholesale_min_qty: 20,
+        in_stock: 1,
+        stock_qty: 350,
+        featured: 0,
+        rating: 4.9,
+        reviews_count: 50,
+        badge: 'Concealed Wiring',
+        image_url: '/images/fb/logo.jpg',
+        description_en: 'Unbreakable fire retardant rigid PVC electrical pipe for wall concealment, ceiling casting, and underground wiring protection.',
+        description_bn: 'দেয়াল ও ছাদ ঢালাইয়ের ভেতর গোপন ওয়্যারিংয়ের জন্য মজবুত এবং সহজে না ভাঙা প্রিমিয়াম পিভিসি পাইপ।',
+        specs: JSON.stringify({ 'Diameter': '1 Inch (25mm)', 'Length': '10 Feet', 'Type': 'Rigid Heavy Duty PVC' })
+      },
+      {
+        title_en: 'Super Star Energy Saving 56-Inch Premium Ceiling Fan',
+        title_bn: 'সুপার স্টার এনার্জি সেভিং ৫৬ ইঞ্চি প্রিমিয়াম সিলিং ফ্যান',
+        category: 'fans',
+        brand: 'Super Star',
+        price: 3650,
+        original_price: 4100,
+        unit: 'Piece',
+        wholesale_price: 3450,
+        wholesale_min_qty: 3,
+        in_stock: 1,
+        stock_qty: 65,
+        featured: 1,
+        rating: 4.9,
+        reviews_count: 48,
+        badge: 'High Air Delivery',
+        image_url: '/images/fb/cover.jpg',
+        description_en: 'High-speed aerodynamic blades with 99.9% pure copper motor winding. High air delivery with whisper-quiet operation and low electricity consumption.',
+        description_bn: '৯৯.৯% খাঁটি তামার তারের কয়েল এবং অ্যারোডাইনামিক ব্লেড। বিদ্যুৎ সাশ্রয়ী ও দীর্ঘস্থায়ী বাতাস।',
+        specs: JSON.stringify({ 'Sweep': '56 Inch (1400mm)', 'Power': '70 Watts', 'Speed': '320 RPM', 'Warranty': '2 Years Replacement Guarantee' })
+      }
+    ];
+
+    const stmt = db.prepare(`
+      INSERT INTO products (
+        title_en, title_bn, category, brand, price, original_price, unit, 
+        wholesale_price, wholesale_min_qty, in_stock, stock_qty, featured, 
+        rating, reviews_count, badge, image_url, description_en, description_bn, specs
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    products.forEach(p => {
+      stmt.run([
+        p.title_en, p.title_bn, p.category, p.brand, p.price, p.original_price, p.unit,
+        p.wholesale_price, p.wholesale_min_qty, p.in_stock, p.stock_qty, p.featured,
+        p.rating, p.reviews_count, p.badge, p.image_url, p.description_en, p.description_bn, p.specs
+      ]);
+    });
+    stmt.free();
+  }
+
+  // Seed sample reviews
+  const resRev = db.exec("SELECT COUNT(*) AS c FROM reviews");
+  const revCount = resRev[0]?.values[0][0] || 0;
+  if (revCount === 0) {
+    const reviews = [
+      ['Engineer Ashraful Islam', 'Boro Horishpur, Natore', 5, 'নাটোর শহরের মধ্যে আর আর কেবলের অরিজিনাল তার ও হামকোর আসল ব্যাটারির সবচেয়ে বিশ্বস্ত দোকান। খায়রুল ভাই ও সারোয়ার ভাই এর ব্যবহার অত্যন্ত অমায়িক এবং দাম সবসময় ন্যায্য রাখেন।'],
+      ['Md. Rafiqul Islam (Electric Contractor)', 'Dhaka Road, Natore', 5, 'আমি গত ৩ বছর যাবত যেকোনো বড় বিল্ডিং কনস্ট্রাকশনের ওয়্যারিং মালামাল সারোয়ার ইলেকট্রিক থেকেই হোলসেলে নিই। কোনো নকল মালামালের ভয় নেই, ১০০% জেনুইন।'],
+      ['Sojol Ahmed', 'Natore Sadar', 5, 'Recently bought an authentic Hamko 165Ah Tubular battery and IPS setup. Fast delivery to home and professional installation support.'],
+      ['Tariqul Hasan', 'Singra, Natore', 5, 'সিঙ্গরা থেকে এসেও আমি সারোয়ার ইলেকট্রিক্স থেকেই মালামাল কিনি কারণ তারা হামকো অথোরাইজড ডিলার এবং অফিসিয়াল ওয়ারেন্টি কার্ড দেয়।']
+    ];
+    const stmt = db.prepare("INSERT INTO reviews (author_name, location, rating, comment) VALUES (?, ?, ?, ?)");
+    reviews.forEach(r => stmt.run(r));
+    stmt.free();
+  }
+
+  // Seed initial site settings
+  const resSet = db.exec("SELECT COUNT(*) AS c FROM site_settings");
+  const setCount = resSet[0]?.values[0][0] || 0;
+  if (setCount === 0) {
+    const settings = [
+      ['store_name_en', 'Sarowar Electric & Hardware'],
+      ['store_name_bn', 'সারোয়ার ইলেকট্রিক এন্ড হার্ডওয়্যার'],
+      ['owner_name', 'Md. Sarowar Hossain / Khairul'],
+      ['tagline_bn', 'ইলেকট্রিক্স ও হার্ডওয়্যার পণ্য খুচরা ও পাইকারি বিক্রেতা *আমরা হামকো অথোরাইজড ডিলার'],
+      ['phone_primary', '01780-904878'],
+      ['phone_secondary', '01714-246866'],
+      ['phone_alt', '01300-122400'],
+      ['whatsapp', '8801780904878'],
+      ['email', 'sarowarelectrics@gmail.com'],
+      ['address_bn', 'মিশন হাসপাতালের পূর্ব পার্শ্বে, ঢাকা রোড, বড় হরিশপুর, নাটোর।'],
+      ['address_en', 'East of Mission Hospital, Dhaka Road, Boro Horishpur, Natore - 6400, Bangladesh'],
+      ['business_hours', 'Saturday - Thursday: 8:00 AM - 10:00 PM | Friday: 3:00 PM - 10:00 PM'],
+      ['facebook_url', 'https://web.facebook.com/sarowarelectrics'],
+      ['hamko_dealer', 'Authorized Dealer - Hamko Batteries, Solar & IPS'],
+      ['rrkabel_partner', 'RR Kabel Imperial Electricals Authorized Seller'],
+      ['admin_pin', '1234']
+    ];
+    const stmt = db.prepare("INSERT INTO site_settings (key, value) VALUES (?, ?)");
+    settings.forEach(s => stmt.run(s));
+    stmt.free();
+  }
+}
+
+// Helper methods to query cleanly
+async function query(sql, params = []) {
+  const db = await getDb();
+  const stmt = db.prepare(sql);
+  if (params && params.length > 0) stmt.bind(params);
+  
+  const rows = [];
+  while (stmt.step()) {
+    rows.push(stmt.getAsObject());
+  }
+  stmt.free();
+  return rows;
+}
+
+async function get(sql, params = []) {
+  const rows = await query(sql, params);
+  return rows[0] || null;
+}
+
+async function run(sql, params = []) {
+  const db = await getDb();
+  db.run(sql, params);
+  scheduleSave();
+  
+  // Get last inserted id and changes
+  const res = db.exec("SELECT last_insert_rowid() AS id, changes() AS changes;");
+  const lastId = res[0]?.values[0][0];
+  const changes = res[0]?.values[0][1];
+  return { lastInsertRowid: lastId, changes };
+}
+
+async function exec(sql) {
+  const db = await getDb();
+  const res = db.exec(sql);
+  scheduleSave();
+  return res;
+}
+
+async function resetDb() {
+  const SQL = await initSqlJs();
+  const db = new SQL.Database();
+  dbInstance = db;
+  initSchema(db);
+  seedInitialData(db);
+  saveDb();
+  return true;
+}
+
+module.exports = {
+  getDb,
+  query,
+  get,
+  run,
+  exec,
+  resetDb,
+  initSchema,
+  seedInitialData,
+  saveDb
+};
+
