@@ -14,7 +14,7 @@ A creative, full-stack, responsive web application with a built-in SQLite relati
 
 - **Public Live Storefront:** [https://sojolmahfuz.github.io/sarowar-electric/](https://sojolmahfuz.github.io/sarowar-electric/)
 - **Live Admin Dashboard:** [https://sojolmahfuz.github.io/sarowar-electric/admin.html](https://sojolmahfuz.github.io/sarowar-electric/admin.html)
-- **Admin PIN:** `1234`
+
 
 ---
 
