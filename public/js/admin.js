@@ -54,6 +54,12 @@ function checkAuth() {
   }
 }
 
+function getApiBase() {
+  const custom = localStorage.getItem('seh_backend_url');
+  if (custom && custom.trim()) return custom.trim().replace(/\/$/, '');
+  return '';
+}
+
 // Admin PIN Login
 async function submitAdminLogin(e) {
   if (e) e.preventDefault();
@@ -64,7 +70,8 @@ async function submitAdminLogin(e) {
   if (errorEl) errorEl.classList.add('hidden');
 
   try {
-    const res = await fetch('/api/admin/login', {
+    const fullUrl = (getApiBase() || '') + '/api/admin/login';
+    const res = await fetch(fullUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pin })
@@ -142,10 +149,17 @@ async function loadDashboardData() {
 // Helper fetch with Admin auth & strict error checking
 async function adminFetch(url, options = {}) {
   options.headers = options.headers || {};
-  options.headers['x-admin-pin'] = ADMIN.token;
+  if (ADMIN.token) {
+    options.headers['x-admin-pin'] = ADMIN.token;
+  }
+
+  const base = getApiBase();
+  const fullUrl = (url.startsWith('http://') || url.startsWith('https://'))
+    ? url
+    : (base ? (base + url) : url);
 
   try {
-    const res = await fetch(url, options);
+    const res = await fetch(fullUrl, options);
     if (res.status === 401) {
       alert('Session expired or invalid PIN. Please log in again.');
       adminLogout();
@@ -441,9 +455,8 @@ function renderStats() {
 // ==========================================
 async function loadCategories() {
   try {
-    const res = await fetch('/api/categories');
-    const json = await res.json();
-    if (json.success) {
+    const json = await adminFetch('/api/categories');
+    if (json && json.success && json.data) {
       ADMIN.categories = json.data;
       const select = document.getElementById('prod-modal-category');
       if (select) {
@@ -451,24 +464,40 @@ async function loadCategories() {
       }
       const filterSelect = document.getElementById('prod-filter-category');
       if (filterSelect) {
-        filterSelect.innerHTML = `<option value="all">All Categories</option>` + ADMIN.categories.map(c => `<option value="${c.id}">${c.name_bn}</option>`).join('');
+        filterSelect.innerHTML = `<option value="all">সকল ক্যাটাগরি (All)</option>` + ADMIN.categories.map(c => `<option value="${c.id}">${c.name_bn}</option>`).join('');
       }
+      return;
     }
   } catch (e) {
-    console.error(e);
+    console.warn('Using fallback categories');
+  }
+
+  ADMIN.categories = typeof DEFAULT_CATEGORIES !== 'undefined' ? DEFAULT_CATEGORIES : [];
+  const select = document.getElementById('prod-modal-category');
+  if (select && ADMIN.categories.length) {
+    select.innerHTML = ADMIN.categories.map(c => `<option value="${c.id}">${c.name_bn} (${c.name_en})</option>`).join('');
+  }
+  const filterSelect = document.getElementById('prod-filter-category');
+  if (filterSelect && ADMIN.categories.length) {
+    filterSelect.innerHTML = `<option value="all">সকল ক্যাটাগরি (All)</option>` + ADMIN.categories.map(c => `<option value="${c.id}">${c.name_bn}</option>`).join('');
   }
 }
 
 async function loadProducts() {
   try {
-    const json = await fetch('/api/products?limit=200').then(r => r.json());
-    if (json.success) {
+    const json = await adminFetch('/api/products?limit=200');
+    if (json && json.success && json.data && json.data.length) {
       ADMIN.products = json.data;
       renderProductsTable();
+      return;
     }
   } catch (e) {
-    console.error(e);
+    console.warn('Using fallback products');
   }
+
+  const stored = JSON.parse(localStorage.getItem('sarowar_local_products') || 'null');
+  ADMIN.products = (stored && stored.length) ? stored : (typeof DEFAULT_PRODUCTS !== 'undefined' ? DEFAULT_PRODUCTS : []);
+  renderProductsTable();
 }
 
 function renderProductsTable() {
@@ -1276,6 +1305,9 @@ async function submitManualReview(e) {
 // 7. STORE SETTINGS & PIN MANAGEMENT
 // ==========================================
 async function loadSettings() {
+  setElVal('set-backend-url', localStorage.getItem('seh_backend_url') || '');
+  updateBackendStatusPill();
+
   try {
     const json = await adminFetch('/api/admin/settings');
     if (json.success && json.data) {
@@ -1295,6 +1327,70 @@ async function loadSettings() {
   } catch (e) {
     console.error(e);
   }
+}
+
+async function updateBackendStatusPill() {
+  const pill = document.getElementById('backend-status-pill');
+  if (!pill) return;
+  const base = getApiBase();
+  const testUrl = (base || '') + '/api/settings';
+
+  try {
+    const res = await fetch(testUrl);
+    if (res.ok) {
+      pill.textContent = '🟢 Live Server Connected';
+      pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      return;
+    }
+  } catch (err) {}
+
+  if (base) {
+    pill.textContent = '❌ Disconnected';
+    pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500/20 text-red-300 border border-red-500/30';
+  } else {
+    pill.textContent = '⚡ Direct Server Mode';
+    pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30';
+  }
+}
+
+async function testAndSaveBackendUrl() {
+  const input = document.getElementById('set-backend-url');
+  const pill = document.getElementById('backend-status-pill');
+  if (!input) return;
+
+  const url = input.value.trim().replace(/\/$/, '');
+  if (pill) {
+    pill.textContent = 'Connecting...';
+    pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+  }
+
+  if (!url) {
+    localStorage.removeItem('seh_backend_url');
+    updateBackendStatusPill();
+    showAdminToast('Reset to default direct connection');
+    await loadDashboardData();
+    return;
+  }
+
+  try {
+    const res = await fetch(url + '/api/settings');
+    if (res.ok) {
+      localStorage.setItem('seh_backend_url', url);
+      if (pill) {
+        pill.textContent = '🟢 Live Server Connected';
+        pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      }
+      showAdminToast('Live backend connected successfully!');
+      await loadDashboardData();
+      return;
+    }
+  } catch (err) {}
+
+  if (pill) {
+    pill.textContent = '❌ Connection Failed';
+    pill.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500/20 text-red-300 border border-red-500/30';
+  }
+  alert('Could not connect to: ' + url + '\nPlease ensure the Node.js server is running and accessible.');
 }
 
 async function submitStoreSettings(e) {

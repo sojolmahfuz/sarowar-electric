@@ -433,8 +433,30 @@
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
             <!-- Store Profile Settings Form -->
-            <div class="lg:col-span-8 bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-md">
-              <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+            <div class="lg:col-span-8 bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-md space-y-5">
+              
+              <!-- Live Node.js Backend URL Settings Card -->
+              <div class="p-4 bg-slate-950/80 rounded-2xl border border-slate-800 space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="block text-slate-200 font-bold text-xs flex items-center gap-1.5">
+                    <i class="fas fa-server text-emerald-400"></i> লাইভ Node.js ব্যাকঅ্যান্ড API সংযোগ (Live Database Backend)
+                  </label>
+                  <span id="backend-status-pill" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                    Checking...
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-400">
+                  লোকাল সার্ভারে চালাতে ফাঁকা রাখুন বা <code>http://localhost:3000</code> দিন। ক্লাউড সার্ভার থাকলে URL দিন (যেমন: Render বা Railway)।
+                </p>
+                <div class="flex gap-2">
+                  <input type="url" id="set-backend-url" placeholder="http://localhost:3000 অথবা https://your-app.onrender.com" class="flex-1 p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white outline-none focus:border-orange-500 text-xs">
+                  <button type="button" onclick="testAndSaveBackendUrl()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow-md shadow-emerald-600/20">
+                    <i class="fas fa-plug"></i> সেভ ও টেস্ট
+                  </button>
+                </div>
+              </div>
+
+              <h3 class="text-sm font-bold text-white flex items-center gap-2 pt-2 border-t border-slate-800">
                 <i class="fas fa-store text-orange-400"></i> শোরুম ও পাবলিক কন্টাক্ট তথ্য
               </h3>
 

@@ -131,10 +131,22 @@ function initLanguageSwitcher() {
   if (btn) btn.addEventListener('click', toggleLanguage);
 }
 
+function getApiBase() {
+  const custom = localStorage.getItem('seh_backend_url');
+  if (custom && custom.trim()) return custom.trim().replace(/\/$/, '');
+  return '';
+}
+
+function apiFetch(url, options = {}) {
+  const base = getApiBase();
+  const fullUrl = (url.startsWith('http://') || url.startsWith('https://')) ? url : (base + url);
+  return fetch(fullUrl, options);
+}
+
 // Load Store Settings
 async function loadStoreSettings() {
   try {
-    const res = await fetch('/api/settings');
+    const res = await apiFetch('/api/settings');
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) {
@@ -155,7 +167,7 @@ async function loadStoreSettings() {
 // Load Categories
 async function loadCategories() {
   try {
-    const res = await fetch('/api/categories');
+    const res = await apiFetch('/api/categories');
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) {
@@ -219,7 +231,7 @@ async function loadProducts() {
     if (STATE.currentBrand && STATE.currentBrand !== 'all') url += `&brand=${encodeURIComponent(STATE.currentBrand)}`;
     if (STATE.searchQuery) url += `&search=${encodeURIComponent(STATE.searchQuery)}`;
 
-    const res = await fetch(url);
+    const res = await apiFetch(url);
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) {
@@ -711,7 +723,7 @@ async function submitCheckoutOrder(e) {
   const deliveryFee = upazila === 'store_pickup' ? 0 : (upazila === 'Natore Sadar' ? 50 : 100);
 
   try {
-    const res = await fetch('/api/orders', {
+    const res = await apiFetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -814,7 +826,7 @@ async function trackOrder() {
 
   let foundOrder = null;
   try {
-    const res = await fetch(`/api/orders/track/${encodeURIComponent(query)}`);
+    const res = await apiFetch(`/api/orders/track/${encodeURIComponent(query)}`);
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) {
@@ -1090,7 +1102,7 @@ function initForms() {
       btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Submitting...`;
 
       try {
-        const res = await fetch('/api/quotations', {
+        const res = await apiFetch('/api/quotations', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1157,7 +1169,7 @@ function initForms() {
       btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Booking...`;
 
       try {
-        const res = await fetch('/api/service-bookings', {
+        const res = await apiFetch('/api/service-bookings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1217,7 +1229,7 @@ function initForms() {
       const comment = document.getElementById('rev-comment').value.trim();
 
       try {
-        const res = await fetch('/api/reviews', {
+        const res = await apiFetch('/api/reviews', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ author_name: name, location, rating: Number(rating), comment })
@@ -1259,7 +1271,7 @@ function initForms() {
 // Load Reviews
 async function loadReviews() {
   try {
-    const res = await fetch('/api/reviews');
+    const res = await apiFetch('/api/reviews');
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data && json.data.length) {
