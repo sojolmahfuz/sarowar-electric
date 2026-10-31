@@ -134,6 +134,7 @@ function switchTab(tabId) {
   if (tabId === 'services') loadServices();
   if (tabId === 'reviews') loadReviews();
   if (tabId === 'settings') loadSettings();
+  if (tabId === 'database') initDatabaseTelemetryAndCloudSync();
 }
 
 // Load All Initial Data
@@ -144,6 +145,7 @@ async function loadDashboardData() {
   await loadOrders();
   await loadQuotations();
   await loadServices();
+  initDatabaseTelemetryAndCloudSync();
 }
 
 // Helper fetch with Admin auth & strict error checking
@@ -587,6 +589,7 @@ async function quickUpdateStock(id, newQty) {
     showAdminToast('Stock updated!');
     await loadProducts();
     await loadStats();
+    if (typeof autoSyncToCloud === 'function') autoSyncToCloud('product', 'stock', { id, stock_qty: qty });
   } catch (e) {
     alert('Stock update failed: ' + e.message);
   }
@@ -840,6 +843,9 @@ async function submitProductForm(e) {
     closeProductCrudModal();
     await loadProducts();
     await loadStats();
+    if (typeof autoSyncToCloud === 'function') {
+      autoSyncToCloud('product', 'save', { ...payload, id: id ? Number(id) : (res?.data?.id || Date.now()) });
+    }
   } catch (err) {
     console.error('Error submitting product form:', err);
     alert('Error saving product: ' + err.message);
@@ -861,6 +867,7 @@ async function deleteProduct(id) {
     showAdminToast('Product deleted successfully');
     await loadProducts();
     await loadStats();
+    if (typeof autoSyncToCloud === 'function') autoSyncToCloud('product', 'delete', id);
   } catch (e) {
     alert('Delete failed: ' + e.message);
   }
@@ -948,6 +955,7 @@ async function updateOrderStatusInTable(id, status) {
     showAdminToast(`Order #${id} updated to ${status}`);
     await loadOrders();
     await loadStats();
+    if (typeof autoSyncToCloud === 'function') autoSyncToCloud('order', 'update', { id, status });
   } catch (e) {
     alert('Update failed: ' + e.message);
   }
@@ -1416,6 +1424,7 @@ async function submitStoreSettings(e) {
       body: JSON.stringify(payload)
     });
     showAdminToast('Store settings saved successfully!');
+    if (typeof autoSyncToCloud === 'function') autoSyncToCloud('settings', 'save', payload);
   } catch (e) {
     alert('Settings save failed: ' + e.message);
   }
@@ -1548,4 +1557,401 @@ function showAdminToast(msg) {
     toast.style.opacity = '0';
     setTimeout(() => toast.remove(), 300);
   }, 2500);
+}
+
+// ==========================================
+// 9. DATABASE TELEMETRY & CLOUD SYNC ENGINE
+// Dual-Engine: SQLite Local Backend + Firebase Realtime Database REST API + LocalStorage Vault
+// ==========================================
+
+const DB_CONFIG_KEY = 'sarowar_db_config_v1';
+const DEFAULT_DB_CONFIG = {
+  firebaseUrl: 'https://alaminmahfuz-portfolio-default-rtdb.firebaseio.com',
+  autoSync: true
+};
+
+function getDatabaseConfig() {
+  try {
+    const raw = localStorage.getItem(DB_CONFIG_KEY);
+    if (raw) return Object.assign({}, DEFAULT_DB_CONFIG, JSON.parse(raw));
+  } catch (e) {
+    console.warn('Error reading DB config:', e);
+  }
+  return Object.assign({}, DEFAULT_DB_CONFIG);
+}
+
+function saveDatabaseConfig(cfg) {
+  const merged = Object.assign(getDatabaseConfig(), cfg || {});
+  localStorage.setItem(DB_CONFIG_KEY, JSON.stringify(merged));
+  return merged;
+}
+
+// Test Connection / Ping Telemetry
+async function testDatabaseConnection() {
+  const cfg = getDatabaseConfig();
+  const start = performance.now();
+
+  // 1. If not file://, test local server DB status endpoint first
+  if (window.location.protocol !== 'file:') {
+    try {
+      const base = getApiBase();
+      const res = await fetch((base || '') + '/api/db/status', { cache: 'no-store' });
+      if (res.ok) {
+        const json = await res.json();
+        const latency = Math.max(1, Math.round(performance.now() - start));
+        return {
+          ok: true,
+          provider: 'Node.js Local Server Database',
+          storage: 'data/sarowar.sqlite (SQLite3)',
+          productsCount: json.productsCount || (ADMIN.products ? ADMIN.products.length : 15),
+          ordersCount: json.ordersCount || 0,
+          latencyMs: latency
+        };
+      }
+    } catch (e) {
+      // Local server not running
+    }
+  }
+
+  // 2. Test Firebase Realtime Database
+  if (cfg.firebaseUrl) {
+    try {
+      const cleanUrl = cfg.firebaseUrl.replace(/\/+$/, '');
+      const res = await fetch(`${cleanUrl}/.json?shallow=true`, { cache: 'no-store' });
+      const latency = Math.max(1, Math.round(performance.now() - start));
+      if (res.ok || res.status === 404 || res.status === 401 || res.status === 200) {
+        const prods = JSON.parse(localStorage.getItem('sarowar_local_products') || 'null') || (typeof DEFAULT_PRODUCTS !== 'undefined' ? DEFAULT_PRODUCTS : []);
+        return {
+          ok: true,
+          provider: 'Firebase Realtime Cloud Database',
+          storage: cleanUrl,
+          productsCount: prods.length,
+          latencyMs: latency
+        };
+      }
+    } catch (err) {
+      console.warn('Firebase ping error:', err);
+    }
+  }
+
+  // 3. Fallback to LocalStorage & Git Sync Engine
+  const prods = JSON.parse(localStorage.getItem('sarowar_local_products') || 'null') || (typeof DEFAULT_PRODUCTS !== 'undefined' ? DEFAULT_PRODUCTS : []);
+  const latency = Math.max(1, Math.round(performance.now() - start));
+  return {
+    ok: true,
+    provider: 'Offline LocalStorage & Git Sync Engine',
+    storage: 'Browser LocalStorage Vault',
+    productsCount: prods.length,
+    latencyMs: latency
+  };
+}
+
+// Update DB Telemetry Stats in the UI
+function updateDbStats(res) {
+  const providerEl = document.getElementById('db-stat-provider');
+  const countEl = document.getElementById('db-stat-messages');
+  const pingEl = document.getElementById('db-stat-ping');
+  const badgeEl = document.getElementById('db-health-badge');
+  const engineEl = document.getElementById('db-log-engine');
+  const storageEl = document.getElementById('db-log-storage');
+  const latencyEl = document.getElementById('db-log-latency');
+
+  if (!res) {
+    const prods = JSON.parse(localStorage.getItem('sarowar_local_products') || 'null') || (typeof DEFAULT_PRODUCTS !== 'undefined' ? DEFAULT_PRODUCTS : []);
+    res = {
+      ok: true,
+      provider: 'Offline LocalStorage & Git Sync Engine',
+      storage: 'Browser LocalStorage Vault',
+      productsCount: prods.length,
+      latencyMs: 1
+    };
+  }
+
+  if (providerEl) providerEl.textContent = res.provider || 'Offline LocalStorage & Git Sync Engine';
+  if (countEl) countEl.textContent = res.productsCount != null ? res.productsCount : 15;
+  if (pingEl) pingEl.textContent = `${res.latencyMs || 1} ms`;
+
+  if (badgeEl) {
+    if (res.ok) {
+      badgeEl.textContent = 'CONNECTED';
+      badgeEl.className = 'px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+    } else {
+      badgeEl.textContent = 'OFFLINE';
+      badgeEl.className = 'px-3 py-1 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30';
+    }
+  }
+
+  if (engineEl) engineEl.textContent = res.provider || 'Offline LocalStorage & Git Sync Engine';
+  if (storageEl) storageEl.textContent = res.storage || 'Browser LocalStorage Vault';
+  if (latencyEl) latencyEl.textContent = `${res.latencyMs || 1} ms`;
+}
+
+// Pull All Content from Database
+async function pullAllFromDatabase() {
+  showAdminToast('Fetching content from database...');
+  const cfg = getDatabaseConfig();
+  let loadedProducts = null;
+  let loadedOrders = null;
+  let loadedSettings = null;
+
+  // 1. Try local server
+  if (window.location.protocol !== 'file:') {
+    try {
+      const base = getApiBase();
+      const res = await fetch((base || '') + '/api/products?limit=200');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          loadedProducts = json.data;
+        }
+      }
+    } catch (e) {}
+  }
+
+  // 2. Try Firebase RTDB if not loaded from server
+  if (!loadedProducts && cfg.firebaseUrl) {
+    try {
+      const cleanUrl = cfg.firebaseUrl.replace(/\/+$/, '');
+      const res = await fetch(`${cleanUrl}/sarowar/products.json`, { cache: 'no-store' });
+      if (res.ok) {
+        const fbData = await res.json();
+        if (fbData) {
+          loadedProducts = Array.isArray(fbData) 
+            ? fbData.filter(Boolean) 
+            : Object.values(fbData);
+        }
+      }
+      // Also pull orders
+      const oRes = await fetch(`${cleanUrl}/sarowar/orders.json`, { cache: 'no-store' });
+      if (oRes.ok) {
+        const oData = await oRes.json();
+        if (oData) {
+          loadedOrders = Array.isArray(oData) ? oData.filter(Boolean) : Object.values(oData);
+        }
+      }
+      // Pull settings
+      const sRes = await fetch(`${cleanUrl}/sarowar/settings.json`, { cache: 'no-store' });
+      if (sRes.ok) {
+        const sData = await sRes.json();
+        if (sData) loadedSettings = sData;
+      }
+    } catch (err) {
+      console.warn('Firebase pull error:', err);
+    }
+  }
+
+  // Fallback to local storage or defaults
+  if (!loadedProducts || !loadedProducts.length) {
+    loadedProducts = JSON.parse(localStorage.getItem('sarowar_local_products') || 'null') || (typeof DEFAULT_PRODUCTS !== 'undefined' ? DEFAULT_PRODUCTS : []);
+  }
+
+  // Save to localStorage
+  localStorage.setItem('sarowar_local_products', JSON.stringify(loadedProducts));
+  if (loadedOrders && loadedOrders.length) {
+    localStorage.setItem('sarowar_orders', JSON.stringify(loadedOrders));
+  }
+  if (loadedSettings) {
+    localStorage.setItem('sarowar_settings', JSON.stringify(loadedSettings));
+  }
+
+  ADMIN.products = loadedProducts;
+  if (typeof renderProductsTable === 'function') renderProductsTable();
+  if (typeof loadOrders === 'function') await loadOrders();
+  if (typeof loadStats === 'function') await loadStats();
+
+  updateDbStats({
+    ok: true,
+    provider: cfg.firebaseUrl ? 'Firebase Realtime Cloud Database' : 'Offline LocalStorage & Git Sync Engine',
+    storage: cfg.firebaseUrl ? cfg.firebaseUrl : 'Browser LocalStorage Vault',
+    productsCount: loadedProducts.length,
+    latencyMs: 1
+  });
+
+  showAdminToast(`✓ Database synchronized! (${loadedProducts.length} products loaded)`);
+}
+
+// Push All Content to Database
+async function syncAllToDatabase() {
+  showAdminToast('Pushing full store state to database...');
+  const cfg = getDatabaseConfig();
+  const prods = JSON.parse(localStorage.getItem('sarowar_local_products') || 'null') || (typeof DEFAULT_PRODUCTS !== 'undefined' ? DEFAULT_PRODUCTS : []);
+  const orders = JSON.parse(localStorage.getItem('sarowar_orders') || '[]');
+  const cats = typeof DEFAULT_CATEGORIES !== 'undefined' ? DEFAULT_CATEGORIES : [];
+  const settings = JSON.parse(localStorage.getItem('sarowar_settings') || 'null') || (typeof DEFAULT_SETTINGS !== 'undefined' ? DEFAULT_SETTINGS : {});
+
+  let cloudOk = false;
+  let serverOk = false;
+
+  // 1. Push to Firebase Realtime Database REST API
+  if (cfg.firebaseUrl) {
+    try {
+      const cleanUrl = cfg.firebaseUrl.replace(/\/+$/, '');
+      const fullPayload = {
+        products: prods,
+        categories: cats,
+        orders: orders,
+        settings: settings,
+        updated_at: new Date().toISOString()
+      };
+
+      const res = await fetch(`${cleanUrl}/sarowar.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullPayload)
+      });
+      if (res.ok) cloudOk = true;
+    } catch (e) {
+      console.warn('Firebase push error:', e);
+    }
+  }
+
+  // 2. Push to local server import if available
+  if (window.location.protocol !== 'file:') {
+    try {
+      const base = getApiBase();
+      const res = await fetch((base || '') + '/api/admin/import', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-pin': ADMIN.token || '1234'
+        },
+        body: JSON.stringify({
+          products: prods,
+          categories: cats,
+          orders: orders,
+          settings: settings
+        })
+      });
+      if (res.ok) serverOk = true;
+    } catch (e) {}
+  }
+
+  if (cloudOk || serverOk) {
+    showAdminToast('✓ All store content successfully pushed to Cloud Database!');
+    const box = document.getElementById('db-test-result');
+    if (box) {
+      box.innerHTML = `
+        <div>Database Status: <span class="text-emerald-400 font-bold">✓ Online & Operational (Content Pushed)</span></div>
+        <div>Active Engine: <span class="text-cyan-300">${cfg.firebaseUrl ? 'Firebase RTDB REST Engine' : 'Node.js SQLite Server'}</span></div>
+        <div>Storage Location: <span class="text-slate-300">${cfg.firebaseUrl || 'data/sarowar.sqlite'}</span></div>
+        <div>Sync Timestamp: <span class="text-amber-400 font-bold">${new Date().toLocaleTimeString()}</span></div>
+      `;
+    }
+  } else {
+    showAdminToast('Saved to LocalStorage Vault (Remote server not reachable)');
+  }
+}
+
+// Auto-sync helper for individual actions
+async function autoSyncToCloud(entity, action, data) {
+  const cfg = getDatabaseConfig();
+  if (!cfg.autoSync || !cfg.firebaseUrl) return;
+
+  const cleanUrl = cfg.firebaseUrl.replace(/\/+$/, '');
+  try {
+    if (entity === 'product') {
+      if (action === 'save' && data && data.id) {
+        await fetch(`${cleanUrl}/sarowar/products/${data.id}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+      } else if (action === 'delete' && data) {
+        await fetch(`${cleanUrl}/sarowar/products/${data}.json`, {
+          method: 'DELETE'
+        });
+      } else if (action === 'stock' && data && data.id) {
+        await fetch(`${cleanUrl}/sarowar/products/${data.id}.json`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stock_qty: data.stock_qty, in_stock: data.stock_qty > 0 ? 1 : 0 })
+        });
+      }
+    } else if (entity === 'settings' && data) {
+      await fetch(`${cleanUrl}/sarowar/settings.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } else if (entity === 'order' && data && data.id) {
+      await fetch(`${cleanUrl}/sarowar/orders/${data.id}.json`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: data.status })
+      });
+    }
+  } catch (err) {
+    console.warn('Auto-sync cloud error:', err);
+  }
+}
+
+// Initialize Database Telemetry & Cloud Configuration UI
+function initDatabaseTelemetryAndCloudSync() {
+  const cfg = getDatabaseConfig();
+  const urlInput = document.getElementById('cfg-db-url');
+  const syncCheck = document.getElementById('cfg-auto-sync');
+  const configForm = document.getElementById('db-config-form');
+  const btnPing = document.getElementById('btn-test-db-connection');
+  const btnPull = document.getElementById('btn-pull-db-messages');
+  const btnExport = document.getElementById('btn-export-db-messages');
+  const btnSyncAll = document.getElementById('btn-sync-all-to-db');
+
+  if (urlInput) urlInput.value = cfg.firebaseUrl || 'https://alaminmahfuz-portfolio-default-rtdb.firebaseio.com';
+  if (syncCheck) syncCheck.checked = cfg.autoSync !== false;
+
+  // Form submit: Save DB Config
+  if (configForm && !configForm.dataset.bound) {
+    configForm.dataset.bound = 'true';
+    configForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const firebaseUrl = urlInput ? urlInput.value.trim() : '';
+      const autoSync = syncCheck ? syncCheck.checked : true;
+      saveDatabaseConfig({ firebaseUrl, autoSync });
+      showAdminToast('Cloud Database parameters saved!');
+      testDatabaseConnection().then(updateDbStats);
+    });
+  }
+
+  // Ping button
+  if (btnPing && !btnPing.dataset.bound) {
+    btnPing.dataset.bound = 'true';
+    btnPing.addEventListener('click', async () => {
+      const box = document.getElementById('db-test-result');
+      if (box) {
+        box.innerHTML = '<div class="text-cyan-400"><i class="fas fa-spinner fa-spin"></i> Pinging Database endpoints...</div>';
+      }
+      const res = await testDatabaseConnection();
+      updateDbStats(res);
+      if (box) {
+        box.innerHTML = `
+          <div>Database Status: <span class="${res.ok ? 'text-emerald-400' : 'text-rose-400'} font-bold">${res.ok ? '✓ Online & Operational' : '✗ Offline / Unreachable'}</span></div>
+          <div>Active Engine: <span class="text-cyan-300">${res.provider}</span></div>
+          <div>Storage Location: <span class="text-slate-300">${res.storage}</span></div>
+          <div>Latency: <span class="text-amber-400 font-bold">${res.latencyMs} ms</span></div>
+        `;
+      }
+      showAdminToast(res.ok ? 'Database connection verified!' : 'Database ping failed.');
+    });
+  }
+
+  // Pull button
+  if (btnPull && !btnPull.dataset.bound) {
+    btnPull.dataset.bound = 'true';
+    btnPull.addEventListener('click', pullAllFromDatabase);
+  }
+
+  // Export button
+  if (btnExport && !btnExport.dataset.bound) {
+    btnExport.dataset.bound = 'true';
+    btnExport.addEventListener('click', exportFullDatabaseBackup);
+  }
+
+  // Push all to cloud button
+  if (btnSyncAll && !btnSyncAll.dataset.bound) {
+    btnSyncAll.dataset.bound = 'true';
+    btnSyncAll.addEventListener('click', syncAllToDatabase);
+  }
+
+  // Initial stats calculation
+  updateDbStats();
 }

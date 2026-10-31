@@ -63,6 +63,30 @@ async function checkAdminAuth(req, res, next) {
 // PUBLIC API ROUTES
 // ==========================================
 
+// Database Telemetry Status Check
+app.get('/api/db/status', async (req, res) => {
+  try {
+    const productsCount = await db.get('SELECT COUNT(*) AS count FROM products');
+    const ordersCount = await db.get('SELECT COUNT(*) AS count FROM orders');
+    const quotationsCount = await db.get('SELECT COUNT(*) AS count FROM quotations');
+    const reviewsCount = await db.get('SELECT COUNT(*) AS count FROM reviews');
+
+    res.json({
+      ok: true,
+      success: true,
+      provider: 'Node.js Local Server Database',
+      storage: 'data/sarowar.sqlite (SQLite3)',
+      productsCount: productsCount ? productsCount.count : 0,
+      ordersCount: ordersCount ? ordersCount.count : 0,
+      quotationsCount: quotationsCount ? quotationsCount.count : 0,
+      reviewsCount: reviewsCount ? reviewsCount.count : 0,
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    res.status(500).json({ ok: false, success: false, error: err.message });
+  }
+});
+
 // 1. Get Categories
 app.get('/api/categories', async (req, res) => {
   try {

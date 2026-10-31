@@ -243,9 +243,44 @@ async function loadProducts() {
     // Network or static hosting fallback
   }
 
-  if (!serverLoaded && typeof DEFAULT_PRODUCTS !== 'undefined') {
-    const local = JSON.parse(localStorage.getItem('sarowar_local_products') || 'null');
-    let prods = (local && local.length) ? local : DEFAULT_PRODUCTS;
+  if (!serverLoaded) {
+    let cloudLoaded = false;
+    try {
+      const dbCfg = JSON.parse(localStorage.getItem('sarowar_db_config_v1') || '{}');
+      const fbUrl = dbCfg.firebaseUrl || 'https://alaminmahfuz-portfolio-default-rtdb.firebaseio.com';
+      if (fbUrl) {
+        const cleanUrl = fbUrl.replace(/\/+$/, '');
+        const fbRes = await fetch(`${cleanUrl}/sarowar/products.json`, { cache: 'no-store' });
+        if (fbRes.ok) {
+          const fbData = await fbRes.json();
+          if (fbData) {
+            let items = Array.isArray(fbData) ? fbData.filter(Boolean) : Object.values(fbData);
+            if (items.length > 0) {
+              if (STATE.currentCategory && STATE.currentCategory !== 'all') {
+                items = items.filter(p => p.category === STATE.currentCategory);
+              }
+              if (STATE.currentBrand && STATE.currentBrand !== 'all') {
+                items = items.filter(p => p.brand && p.brand.toLowerCase() === STATE.currentBrand.toLowerCase());
+              }
+              if (STATE.searchQuery) {
+                const q = STATE.searchQuery.toLowerCase();
+                items = items.filter(p => 
+                  (p.title_bn && p.title_bn.toLowerCase().includes(q)) || 
+                  (p.title_en && p.title_en.toLowerCase().includes(q)) ||
+                  (p.brand && p.brand.toLowerCase().includes(q))
+                );
+              }
+              STATE.products = items;
+              cloudLoaded = true;
+            }
+          }
+        }
+      }
+    } catch (e) {}
+
+    if (!cloudLoaded && typeof DEFAULT_PRODUCTS !== 'undefined') {
+      const local = JSON.parse(localStorage.getItem('sarowar_local_products') || 'null');
+      let prods = (local && local.length) ? local : DEFAULT_PRODUCTS;
 
     if (STATE.currentCategory && STATE.currentCategory !== 'all') {
       prods = prods.filter(p => p.category === STATE.currentCategory);
@@ -275,6 +310,7 @@ async function loadProducts() {
     }
 
     STATE.products = prods;
+    }
   }
 
   renderProducts();
@@ -742,6 +778,20 @@ async function submitCheckoutOrder(e) {
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.order) {
+        // Sync to Firebase Cloud if available
+        try {
+          const dbCfg = JSON.parse(localStorage.getItem('sarowar_db_config_v1') || '{}');
+          const fbUrl = dbCfg.firebaseUrl || 'https://alaminmahfuz-portfolio-default-rtdb.firebaseio.com';
+          if (fbUrl) {
+            const cleanUrl = fbUrl.replace(/\/+$/, '');
+            fetch(`${cleanUrl}/sarowar/orders/${json.order.id}.json`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(json.order)
+            }).catch(() => {});
+          }
+        } catch (e) {}
+
         STATE.cart = [];
         saveCart();
         updateCartBadge();
@@ -778,6 +828,20 @@ async function submitCheckoutOrder(e) {
     const existing = JSON.parse(localStorage.getItem('sarowar_orders') || '[]');
     existing.unshift(localOrder);
     localStorage.setItem('sarowar_orders', JSON.stringify(existing));
+
+    // Write directly to Firebase Cloud RTDB
+    try {
+      const dbCfg = JSON.parse(localStorage.getItem('sarowar_db_config_v1') || '{}');
+      const fbUrl = dbCfg.firebaseUrl || 'https://alaminmahfuz-portfolio-default-rtdb.firebaseio.com';
+      if (fbUrl) {
+        const cleanUrl = fbUrl.replace(/\/+$/, '');
+        fetch(`${cleanUrl}/sarowar/orders/${localOrder.id}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(localOrder)
+        }).catch(() => {});
+      }
+    } catch (e) {}
 
     STATE.cart = [];
     saveCart();
@@ -1142,6 +1206,19 @@ function initForms() {
         quotes.unshift(localQ);
         localStorage.setItem('sarowar_quotations', JSON.stringify(quotes));
 
+        try {
+          const dbCfg = JSON.parse(localStorage.getItem('sarowar_db_config_v1') || '{}');
+          const fbUrl = dbCfg.firebaseUrl || 'https://alaminmahfuz-portfolio-default-rtdb.firebaseio.com';
+          if (fbUrl) {
+            const cleanUrl = fbUrl.replace(/\/+$/, '');
+            fetch(`${cleanUrl}/sarowar/quotations/${localQ.id}.json`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(localQ)
+            }).catch(() => {});
+          }
+        } catch (e) {}
+
         alert(isBn ? `ধন্যবাদ! আপনার কোটেশন রিকোয়েস্ট (নম্বর: ${qNum}) সংরক্ষিত হয়েছে। সারোয়ার ইলেকট্রিক থেকে দ্রুত যোগাযোগ করা হবে।` : 'Quotation submitted successfully!');
         quoteForm.reset();
       } finally {
@@ -1208,6 +1285,19 @@ function initForms() {
         const bookings = JSON.parse(localStorage.getItem('sarowar_bookings') || '[]');
         bookings.unshift(localB);
         localStorage.setItem('sarowar_bookings', JSON.stringify(bookings));
+
+        try {
+          const dbCfg = JSON.parse(localStorage.getItem('sarowar_db_config_v1') || '{}');
+          const fbUrl = dbCfg.firebaseUrl || 'https://alaminmahfuz-portfolio-default-rtdb.firebaseio.com';
+          if (fbUrl) {
+            const cleanUrl = fbUrl.replace(/\/+$/, '');
+            fetch(`${cleanUrl}/sarowar/services/${localB.id}.json`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(localB)
+            }).catch(() => {});
+          }
+        } catch (e) {}
 
         alert(isBn ? `ইলেকট্রিশিয়ান বুকিং সফল হয়েছে (বুকিং নং: ${bNum})। আমাদের অভিজ্ঞ টেকনিশিয়ান শীঘ্রই যোগাযোগ করবেন।` : 'Electrician booked successfully!');
         serviceForm.reset();

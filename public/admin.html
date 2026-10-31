@@ -561,59 +561,167 @@
         </div>
 
         <!-- ============================================== -->
-        <!-- TAB 8: DATABASE TOOLS & BACKUP -->
+        <!-- TAB 8: DATABASE TELEMETRY & CLOUD SYNC -->
         <!-- ============================================== -->
         <div id="tab-database" class="tab-panel space-y-6 hidden">
           <div>
-            <h2 class="text-xl font-black text-white">ডাটাবেস টুলস & সিস্টেম ব্যাকআপ</h2>
-            <p class="text-xs text-slate-400">সম্পূর্ণ ওয়েবসাইটের ডাটাবেস এক্সপোর্ট, রিস্টোর, ফ্যাক্টরি রিসেট এবং কাস্টম SQL কুয়েরি।</p>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[10px] font-mono tracking-widest uppercase font-bold text-cyan-400">DUAL-ENGINE SYSTEM</span>
+              <span class="text-xs text-slate-500">•</span>
+              <span class="text-xs text-slate-400">REST API & Cloud Uplink</span>
+            </div>
+            <h2 class="text-xl font-black text-white">ডাটাবেস টেলিমেট্রি & ক্লাউড সিঙ্ক আর্কিটেকচার</h2>
+            <p class="text-xs text-slate-400">GitHub Pages স্ট্যাটিক হোস্টিং এবং লোকাল Node.js ব্যাকঅ্যান্ড উভয়ের জন্যই রিয়েলটাইম ফায়ারবেস ক্লাউড ডাটাবেস সমন্বয়।</p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            
-            <!-- Tool 1: Export Backup -->
-            <div class="p-5 bg-slate-900 rounded-3xl border border-slate-800 shadow-sm flex flex-col justify-between">
+          <!-- TOP DUAL CARDS: TELEMETRY & CLOUD CONFIGURATION (Exact Portfolio Architecture) -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- CARD 1: DATABASE TELEMETRY -->
+            <div class="p-6 bg-slate-900/90 backdrop-blur rounded-3xl border border-slate-800 shadow-xl flex flex-col justify-between space-y-5">
               <div>
-                <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg mb-3">
-                  <i class="fas fa-download"></i>
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <span class="text-[10px] font-mono tracking-widest uppercase font-bold text-cyan-400 block">DATABASE TELEMETRY</span>
+                    <h3 class="text-base font-black text-white mt-0.5">Live Storage & Connectivity Status</h3>
+                  </div>
+                  <span id="db-health-badge" class="px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    CONNECTED
+                  </span>
                 </div>
-                <h3 class="font-bold text-white text-sm mb-1">ডাটাবেস ব্যাকআপ (JSON)</h3>
-                <p class="text-xs text-slate-400 mb-4">সকল পণ্য, অর্ডার, কোটেশন ও কাস্টমার রিভিউ এক ক্লিকে অফলাইনে ডাউনলোড করে সংরক্ষণ করুন।</p>
+
+                <!-- 3 KPI STAT TILES -->
+                <div class="grid grid-cols-3 gap-3">
+                  <div class="p-3 bg-slate-950/70 rounded-2xl border border-slate-800/80">
+                    <span class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider block">DATABASE ENGINE</span>
+                    <div id="db-stat-provider" class="text-xs font-bold text-slate-100 mt-1 leading-snug">
+                      Offline LocalStorage & Git Sync Engine
+                    </div>
+                  </div>
+                  <div class="p-3 bg-slate-950/70 rounded-2xl border border-slate-800/80">
+                    <span class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider block">STORED PRODUCTS</span>
+                    <div id="db-stat-messages" class="text-lg font-bold text-cyan-400 mt-1 font-mono">
+                      15
+                    </div>
+                  </div>
+                  <div class="p-3 bg-slate-950/70 rounded-2xl border border-slate-800/80">
+                    <span class="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-wider block">CONNECTION PING</span>
+                    <div id="db-stat-ping" class="text-lg font-bold text-emerald-400 mt-1 font-mono">
+                      1 ms
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ACTION BUTTONS STACK -->
+                <div class="space-y-2.5 mt-5">
+                  <button type="button" id="btn-test-db-connection" class="w-full py-2.5 px-4 rounded-xl border border-slate-700 hover:border-cyan-500 bg-slate-800/90 hover:bg-slate-800 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition shadow-sm">
+                    <i class="fas fa-bolt text-amber-400"></i>
+                    <span>Ping & Test Database Uplink</span>
+                  </button>
+
+                  <button type="button" id="btn-pull-db-messages" class="w-full py-2.5 px-4 rounded-xl border border-slate-700 hover:border-cyan-500 bg-slate-800/90 hover:bg-slate-800 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition shadow-sm">
+                    <i class="fas fa-file-import text-blue-400"></i>
+                    <span>Pull All Content from Database</span>
+                  </button>
+
+                  <button type="button" id="btn-export-db-messages" class="w-full py-2.5 px-4 rounded-xl border border-slate-700 hover:border-cyan-500 bg-slate-800/90 hover:bg-slate-800 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition shadow-sm">
+                    <i class="fas fa-box text-amber-500"></i>
+                    <span>Export Database (.json)</span>
+                  </button>
+                </div>
               </div>
-              <button onclick="exportFullDatabaseBackup()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2">
-                <i class="fas fa-file-download"></i> ব্যাকআপ ডাউনলোড
-              </button>
+
+              <!-- TELEMETRY CONSOLE RESULT -->
+              <div id="db-test-result" class="p-3.5 bg-slate-950/90 rounded-2xl border border-slate-800/90 text-[11px] font-mono space-y-1">
+                <div>Database Status: <span class="text-emerald-400 font-bold">✓ Online & Operational</span></div>
+                <div>Active Engine: <span class="text-cyan-300" id="db-log-engine">Offline LocalStorage & Git Sync Engine</span></div>
+                <div>Storage Location: <span class="text-slate-300" id="db-log-storage">Browser LocalStorage Vault</span></div>
+                <div>Latency: <span class="text-amber-400 font-bold" id="db-log-latency">1 ms</span></div>
+              </div>
             </div>
 
-            <!-- Tool 2: Restore Backup -->
+            <!-- CARD 2: CLOUD DATABASE PARAMETERS -->
+            <form id="db-config-form" class="p-6 bg-slate-900/90 backdrop-blur rounded-3xl border border-slate-800 shadow-xl flex flex-col justify-between space-y-5">
+              <div>
+                <div class="mb-3">
+                  <span class="text-[10px] font-mono tracking-widest uppercase font-bold text-cyan-400 block">DATABASE CONFIGURATION</span>
+                  <h3 class="text-base font-black text-white mt-0.5">Cloud Database Parameters</h3>
+                </div>
+
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                  Configure your cloud database endpoint. When visitors send transmissions from anywhere in the world on <strong class="text-cyan-400">https://sojolmahfuz.github.io/sarowar-electric</strong>, they write directly to this database!
+                </p>
+
+                <div class="space-y-3.5">
+                  <div>
+                    <label for="cfg-db-url" class="block text-[10px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                      FIREBASE REALTIME DATABASE REST URL
+                    </label>
+                    <input
+                      type="url"
+                      id="cfg-db-url"
+                      placeholder="https://<YOUR-PROJECT>-default-rtdb.firebaseio.com"
+                      value="https://alaminmahfuz-portfolio-default-rtdb.firebaseio.com"
+                      class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl font-mono text-xs text-white outline-none focus:border-cyan-500 transition shadow-inner"
+                    />
+                    <span class="text-[11px] text-slate-400 block mt-1.5">
+                      Works natively across GitHub Pages without server code. Uses REST endpoint <code class="text-cyan-300 bg-slate-950/60 px-1 py-0.5 rounded">/sarowar/products.json</code>, <code class="text-cyan-300 bg-slate-950/60 px-1 py-0.5 rounded">/sarowar/orders.json</code>, and <code class="text-cyan-300 bg-slate-950/60 px-1 py-0.5 rounded">/sarowar/settings.json</code>.
+                    </span>
+                  </div>
+
+                  <div class="pt-2">
+                    <label class="flex items-center gap-2.5 cursor-pointer text-xs text-slate-300 select-none">
+                      <input type="checkbox" id="cfg-auto-sync" checked class="w-4 h-4 rounded border-slate-700 bg-slate-950 text-cyan-500 focus:ring-0">
+                      <span>Auto-sync all portal changes to Cloud Database on Save</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ACTION BUTTONS ROW -->
+              <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+                <button type="button" id="btn-sync-all-to-db" class="px-4 py-2.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 font-bold text-xs flex items-center gap-2 transition shadow-sm">
+                  <i class="fas fa-rocket text-purple-400"></i>
+                  <span>Push All Content to Database</span>
+                </button>
+                <button type="submit" id="btn-save-db-config" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/20 transition">
+                  Save DB Config
+                </button>
+              </div>
+            </form>
+
+          </div>
+
+          <!-- SECONDARY ROW: RESTORE & FACTORY RESET -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+            <!-- Tool: Restore Backup -->
             <div class="p-5 bg-slate-900 rounded-3xl border border-slate-800 shadow-sm flex flex-col justify-between">
               <div>
                 <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg mb-3">
                   <i class="fas fa-upload"></i>
                 </div>
-                <h3 class="font-bold text-white text-sm mb-1">ব্যাকআপ ফাইল রিস্টোর</h3>
+                <h3 class="font-bold text-white text-sm mb-1">ব্যাকআপ ফাইল রিস্টোর (JSON Restore)</h3>
                 <p class="text-xs text-slate-400 mb-4">পূর্বে ডাউনলোড করা যেকোনো JSON ব্যাকআপ ফাইল সিলেক্ট করে ডাটাবেস পুনরুদ্ধার করুন।</p>
               </div>
-              <label class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer">
+              <label class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer transition">
                 <i class="fas fa-file-upload"></i> ফাইল থেকে রিস্টোর
                 <input type="file" accept=".json" onchange="restoreDatabaseFromFile(event)" class="hidden">
               </label>
             </div>
 
-            <!-- Tool 3: Factory Reset -->
+            <!-- Tool: Factory Reset -->
             <div class="p-5 bg-slate-900 rounded-3xl border border-slate-800 shadow-sm flex flex-col justify-between">
               <div>
                 <div class="w-10 h-10 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center text-lg mb-3">
                   <i class="fas fa-trash-restore"></i>
                 </div>
                 <h3 class="font-bold text-white text-sm mb-1">ফ্যাক্টরি ডাটাবেস রিসেট</h3>
-                <p class="text-xs text-slate-400 mb-4">প্রয়োজনে সম্পূর্ণ ডাটাবেস পুনরায় ডিফল্ট শোরুম সিড ডেটায় ফিরিয়ে নিতে এই বাটন ব্যবহার করুন।</p>
+                <p class="text-xs text-slate-400 mb-4">প্রয়োজনে সম্পূর্ণ ডাটাবেস পুনরায় ডিফল্ট ১৫টি শোরুম সিড পণ্যে ফিরিয়ে নিতে এই বাটন ব্যবহার করুন।</p>
               </div>
               <button onclick="resetDatabaseToDefault()" class="w-full py-2.5 bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 border border-red-500/40 transition">
                 <i class="fas fa-redo"></i> ডিফল্ট ডেটায় রিসেট
               </button>
             </div>
-
           </div>
 
           <!-- Raw SQL Query Console -->
